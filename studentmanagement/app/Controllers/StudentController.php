@@ -8,6 +8,7 @@ class StudentController extends BaseController
 {
     public function index()
     {
-        return 'Helllo Student';
+        return view("Student/home");
     }
 }
+

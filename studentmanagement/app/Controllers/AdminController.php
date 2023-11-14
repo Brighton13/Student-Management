@@ -8,6 +8,7 @@ class AdminController extends BaseController
 {
     public function index()
     {
-        return 'Helllo Admin';
+        return view("admin/dashboard");
     }
 }
+
