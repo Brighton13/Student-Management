@@ -11,26 +11,58 @@
 </head>
 
 <body>
+    <?php
+    if (!empty(session()->getFlashdata("success"))) {
+        ?>
+        <div class="alert alert-success">
+            <?php
+            echo session()->getFlashdata("success")
+                ?>
+        </div>
+        <?php
+    } else if (!empty(session()->getFlashdata("error"))) {
+        ?>
+            <div class="alert alert-danger">
+                <?php
+                echo session()->getFlashdata("error")
+                    ?>
+            </div>
+
+        <?php
+    }
+
+    ?>
     <div class="container d-flex justify-content-center align-items-center vh-100">
+
         <div class="card" style="width: 18rem;">
             <!-- Logo -->
             <img src="<?= base_url('images/logo.png') ?>" style="width: 6rem; height:7rem"
                 class="card-img-top rounded-circle mx-auto mt-3" alt="Logo">
 
             <div class="card-body">
-                <form>
+                <form method="post" action="<?= base_url('login') ?>">
+                    <?php csrf_field() ?>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="id" placeholder="Enter Username">
+                        <input type="text" class="form-control" name="UserID" value="<?= set_value('UserID') ?>"
+                            placeholder=" Enter Username">
+                        <span class="text-danger text-sm">
+                            <?= isset($validation) ? display_form_errors($validation, 'UserID') : "" ?>
+                        </span>
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control" name="password" placeholder="Enter Password">
+                        <input type="password" class="form-control" name="Password" value="<?= set_value('Password') ?>"
+                            placeholder=" Enter Password">
+                        <span class="text-danger text-sm">
+                            <?= isset($validation) ? display_form_errors($validation, 'Password') : "" ?>
+                        </span>
                     </div>
 
                     <button type="submit" class="btn btn-success w-100">Login</button>
 
                     <p class="mt-2"><a href="#">Forgotten your password?</a></p>
                 </form>
+
             </div>
         </div>
     </div>
