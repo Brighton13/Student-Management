@@ -27,22 +27,22 @@ class Home extends BaseController
         if ($this->request->is('post')) {
 
             $rules = [
-                'UserID' => 'required',
+                'studentid' => 'required',
                 'Password' => 'required|min_length[8]'
             ];
 
             if ($this->validate($rules)) {
 
-                $userid = $this->request->getPost('UserID');
+                $userid = $this->request->getPost('studentid');
                 $password = $this->request->getPost('Password');
 
                 $data = [
-                    'UserID' => $userid,
+                    'studentid' => $userid,
                     'Password' => $password // Hash::encrypt($password)
                 ];
 
                 $user = new User();
-                $query = $user->where('UserID', $userid)->first();
+                $query = $user->where('studentid', $userid)->first();
 
                 // Assuming you have a sessionValues method defined
                 $this->sessionValues($query);
@@ -91,5 +91,11 @@ class Home extends BaseController
 
         return redirect()->to('login')->with('error', 'User does not exist');
 
+    }
+
+    public function logout()
+    {
+        session()->destroy();
+        return redirect()->to('login');
     }
 }

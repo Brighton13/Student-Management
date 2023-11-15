@@ -41,7 +41,16 @@
             <div class="card-body">
                 <form method="post" action="<?= site_url('User/enroll') ?>">
                     <?php csrf_field() ?>
-                    <div class="mb-3">
+                    <div class=" mb-3">
+                        <input type="text" class="form-control" name="studentid" value="<?= $studentid ?>">
+
+                        <span class="text-danger text-sm">
+                            <?= isset($validation) ? display_form_errors($validation, 'studentid') : "" ?>
+                        </span>
+                    </div>
+
+
+                    <div class=" mb-3">
                         <input type="text" class="form-control" name="Name" value="<?= set_value('Name') ?>"
                             placeholder=" Enter FullName">
                         <span class="text-danger text-sm">

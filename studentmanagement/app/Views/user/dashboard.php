@@ -10,7 +10,7 @@
 <body>
     <h1>DASHBOARD</h1>
 
-    <a href="#">logout</a>
+    <a href="<?= site_url('/logout') ?>">logout</a>
 
 </body>
 
