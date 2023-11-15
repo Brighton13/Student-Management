@@ -10,7 +10,7 @@
 <body>
     <h1>DASHBOARD</h1>
 
-    <a href="<?= session()->destroy() ?>">logout</a>
+    <a href="#">logout</a>
 
 </body>
 
