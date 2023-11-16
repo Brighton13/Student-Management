@@ -9,10 +9,10 @@ class Announcements extends Model
     protected $table = 'announcements';
     protected $primaryKey = 'ID';
     protected $useAutoIncrement = true;
-    protected $returnType = 'Object';
+    protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Title', 'File', 'Date'];
+    protected $allowedFields = ['Title', 'File'];
 
     // Dates
     protected $useTimestamps = false;

@@ -43,10 +43,10 @@
                 <form method="post" action="<?= base_url('login') ?>">
                     <?php csrf_field() ?>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="studentid" value="<?= set_value('studentid') ?>"
+                        <input type="text" class="form-control" name="StudentID" value="<?= set_value('StudentID') ?>"
                             placeholder=" Enter your Id">
                         <span class="text-danger text-sm">
-                            <?= isset($validation) ? display_form_errors($validation, 'studentid') : "" ?>
+                            <?= isset($validation) ? display_form_errors($validation, 'StudentID') : "" ?>
                         </span>
                     </div>
 

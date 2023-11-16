@@ -3,6 +3,7 @@
 namespace App\Controllers;
 
 use App\Controllers\BaseController;
+use App\Models\Announcements;
 use App\Models\Subject;
 use App\Models\User;
 use App\Libraries\Hash;
@@ -22,11 +23,10 @@ class UserController extends BaseController
 
     protected function StudentIDgenerator()
     {
-
-        //  $firstrand = mt_rand(23, 23);
-        $secondrand = mt_rand(100000, 23200002);
-        //  $randomNumber = mt_rand(1, 999);
-        $studentid = $secondrand;
+        $currentyear = date('Y') - 2000;
+        $currentmonth = date('m');
+        $randomNumber = mt_rand(1000, 9999);
+        $studentid = $currentyear . $currentmonth . $randomNumber;
 
         return $studentid;
 
@@ -38,7 +38,7 @@ class UserController extends BaseController
 
         if ($this->request->is("get")) {
             $data = [
-                'studentid' => $this->StudentIDgenerator()
+                'StudentID' => $this->StudentIDgenerator()
             ];
 
             return view("user/enroll", $data);
@@ -53,7 +53,7 @@ class UserController extends BaseController
             "Address" => "required",
             'Phone' => 'required|max_length[15]',
             "Grade" => "required",
-            'studentid' => 'required'
+            'StudentID' => 'is_unique[users.StudentID]'
         ];
 
         if ($this->Validate($rules)) {
@@ -63,10 +63,10 @@ class UserController extends BaseController
             $Address = $this->request->getPost('Address');
             $Phone = $this->request->getPost('Phone');
             $Grade = $this->request->getPost('Grade');
-            $studentid = $this->request->getPost('studentid');
+            // $studentid = $this->request->getPost('StudentID');
 
             $data = [
-                "studentid" => '23' . $this->StudentIDgenerator(),
+                "StudentID" => $this->StudentIDgenerator(),
                 "Name" => $name,
                 "Age" => $Age,
                 "Email" => $email,
@@ -85,8 +85,8 @@ class UserController extends BaseController
             if ($query === false) {
                 return redirect()->to("user/enroll")->with("error", "Student Enrollment Failed");
             }
-            var_dump($data);
-            // return redirect()->to("user/studentDetails")->with("success", "Student Enrollment Was Successful");
+            // var_dump($data);
+            return redirect()->to("user/studentdetails")->with("success", "Student Enrollment Was Successful");
         } else {
             return view('user/enroll', ['validation' => $validation]);
         }
@@ -125,6 +125,65 @@ class UserController extends BaseController
 
     }
 
+
+
+    public function Announcement()
+    {
+
+        if ($this->request->is("post")) {
+            $validation = \Config\Services::validation();
+            $rules = [
+                "description" => "required",
+                'file' => 'uploaded[file]|max_size[file,1024]|ext_in[file,pdf,doc,docx]'
+            ];
+
+            if ($this->validate($rules)) {
+
+                $file = $this->request->getFile('file');
+
+                if ($file->isvalid() && !$file->hasMoved()) {
+
+                    $file->move('./announcements');
+                }
+
+                $fileName = $file->getName();
+                $data = [
+                    'Title' => $this->request->getPost('description'),
+                    'File' => $fileName,
+                ];
+
+                $announcement = new Announcements();
+
+                $query = $announcement->insert($data);
+
+                if ($query) {
+
+                    return redirect()->to('User')->with('success', 'Announcement Posted');
+                } else {
+                    return redirect()->to('User')->with('error', 'Announcement  was not posted');
+                }
+
+            }
+        }
+
+        return view('announcements');
+
+    }
+
+
+    public function ShowAnnouncement()
+    {
+
+        $announce = new Announcements();
+
+        $query = $announce->findall();
+
+        if ($query) {
+            return view('Student/home', ['announcements' => $query]);
+        } else {
+            return redirect()->to('Student')->with('error', '');
+        }
+    }
 }
 
 

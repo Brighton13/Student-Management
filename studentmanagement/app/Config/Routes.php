@@ -10,6 +10,7 @@ use CodeIgniter\Router\RouteCollection;
 $routes->group('User', ['filter' => 'Auth'], function ($routes) {
     $routes->get('/', 'UserController::index');
     $routes->match(['get', 'post'], 'enroll', 'UserController::EnrollStudent');
+    $routes->match(['get', 'post'], 'announcement', 'UserController::Announcement');
 });
 
 $routes->group('Admin', ['filter' => 'Auth'], function ($routes) {

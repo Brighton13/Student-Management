@@ -27,22 +27,25 @@ class Home extends BaseController
         if ($this->request->is('post')) {
 
             $rules = [
-                'studentid' => 'required',
+                'StudentID' => [
+                    'rules' => ['required'],
+                    'errors' => ['The Identity Number is Required'],
+                ],
                 'Password' => 'required|min_length[8]'
             ];
 
             if ($this->validate($rules)) {
 
-                $userid = $this->request->getPost('studentid');
+                $userid = $this->request->getPost('StudentID');
                 $password = $this->request->getPost('Password');
 
                 $data = [
-                    'studentid' => $userid,
-                    'Password' => $password // Hash::encrypt($password)
+                    'StudentID' => $userid,
+                    'Password' => Hash::encrypt($password)
                 ];
 
                 $user = new User();
-                $query = $user->where('studentid', $userid)->first();
+                $query = $user->where('StudentID', $userid)->first();
 
                 // Assuming you have a sessionValues method defined
                 $this->sessionValues($query);
@@ -76,7 +79,7 @@ class Home extends BaseController
     {
         if ($user) {
             $data = [
-                'UserID' => $user->UserID,
+                'StudentID' => $user->StudentID,
                 'Name' => $user->Name,
                 'Age' => $user->Age,
                 'Grade' => $user->Grade,

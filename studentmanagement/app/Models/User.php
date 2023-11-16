@@ -9,10 +9,10 @@ class User extends Model
     protected $table = 'users';
     protected $primaryKey = 'userID';
     protected $useAutoIncrement = true;
-    protected $returnType = 'array';
+    protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Name', 'Age', 'Grade', 'Address', 'Phone', 'Email', 'Password', 'ConfirmPassword', 'DateEnrolled', 'Role'];
+    protected $allowedFields = ['Name', 'StudentID', 'Age', 'Grade', 'Address', 'Phone', 'Email', 'Password', 'ConfirmPassword', 'DateEnrolled', 'Role'];
 
     // Dates
     protected $useTimestamps = false;

@@ -42,10 +42,9 @@
                 <form method="post" action="<?= site_url('User/enroll') ?>">
                     <?php csrf_field() ?>
                     <div class=" mb-3">
-                        <input type="text" class="form-control" name="studentid" value="<?= $studentid ?>">
-
+                        <input type="hidden" class="form-control" name="StudentID">
                         <span class="text-danger text-sm">
-                            <?= isset($validation) ? display_form_errors($validation, 'studentid') : "" ?>
+                            <?= isset($validation) ? display_form_errors($validation, 'StudentID') : "" ?>
                         </span>
                     </div>
 
