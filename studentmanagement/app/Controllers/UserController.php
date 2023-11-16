@@ -171,19 +171,7 @@ class UserController extends BaseController
     }
 
 
-    public function ShowAnnouncement()
-    {
 
-        $announce = new Announcements();
-
-        $query = $announce->findall();
-
-        if ($query) {
-            return view('Student/home', ['announcements' => $query]);
-        } else {
-            return redirect()->to('Student')->with('error', '');
-        }
-    }
 }
 
 

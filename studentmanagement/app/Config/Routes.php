@@ -19,6 +19,8 @@ $routes->group('Admin', ['filter' => 'Auth'], function ($routes) {
 
 $routes->group('Student', ['filter' => 'Auth'], function ($routes) {
     $routes->get('/', 'StudentController::index');
+    $routes->get('announcement/(:segment)', 'StudentController::ViewAnnouncement/$1');
+    $routes->get('announcements', 'StudentController::ShowAnnouncement');
 });
 
 $routes->get('/', 'Home::index', ['filter' => 'NoAuth']);

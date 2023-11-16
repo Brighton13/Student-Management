@@ -12,7 +12,6 @@
 
     <style>
         /* Custom Styles */
-
         #sidebar {
             height: 100vh;
             position: fixed;
@@ -42,30 +41,9 @@
             }
         }
 
-        .announcements-section .alert {
-            padding: 0.5rem;
-            /* Adjust the padding to reduce the overall size of the alert */
-            font-size: 0.9rem;
-            /* Adjust the font size as needed */
-            margin-bottom: 10px;
-            /* Add margin to separate alerts */
-        }
-
-        .announcements-section .btn {
-            padding: 0.2rem 0.5rem;
-            /* Adjust the padding to reduce the button size */
-            font-size: 0.8rem;
-            /* Adjust the font size as needed */
-        }
-
         .footer {
             text-align: center;
             padding: 10px;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
-            background-color: #f8f9fa;
-            /* Add a background color if needed */
         }
     </style>
 </head>
@@ -75,7 +53,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">Student Portal</a>
+            <a class="navbar-brand" href="<?= base_url('Student') ?>">Student Portal</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -164,7 +142,7 @@
                 <div class="text-center">
                     <img src="<?= base_url('images/logo.png') ?>" alt="Profile" class="rounded-circle" width="40"
                         height="40">
-                    <h2 class="h2 text-color-l">
+                    <h2 class="h2">
                         <?= session()->get('StudentID') ?>
                     </h2>
                 </div>
@@ -173,28 +151,26 @@
 
             <!-- Announcements Section -->
             <div class="announcements-section">
-                <?php foreach ($announcements as $announcement): ?>
 
-                    <div class="alert alert-success d-flex" role="alert">
+                <iframe src="<?= base_url("announcements/" . $Announcement->File) ?>" width=" 999" height="600"
+                    style="border: none;"></iframe>
 
-                        <p><b>
-                                <?= $announcement->Title ?>
-                            </b> </p>
-                        <a href="<?= base_url('Student/announcement/' . $announcement->ID) ?>"
-                            class="btn btn-primary btn-at-end">Open
-                            Document</a>
+                <!-- <div class="alert alert-success d-flex" role="alert">
+                    <p class="me-auto">
+                        hello
+                    </p>
+                    <a href="../announcements/ASSIGN1_dpf.pdf" class="btn btn-primary btn-at-end">Open Document</a>
+                </div> -->
 
-                    </div>
 
-                <?php endforeach; ?>
+
             </div>
-
 
         </main>
     </div>
     </div>
 
-    <div class="footer static">
+    <div class="footer">
         &copy;
         <?= date('Y') ?> Your School Name
     </div>

@@ -103,7 +103,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="#" class="active">Dashboard</a>
+        <a href="<?= site_url('User') ?>">Dashboard</a>
         <a href="<?= site_url('User/enroll') ?>">Enroll Students</a>
         <a href="#">Add Subjects</a>
         <a href="<?= site_url('User/announcement') ?>">Create Announcements</a>
