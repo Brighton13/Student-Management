@@ -64,7 +64,7 @@
                       <div class="collapse" id="submenu2">
                           <ul class="nav flex-column">
                               <li class="nav-item">
-                                  <a class="nav-link" id="hello" href="<?= site_url('Admin/subjects') ?>"  data-page="admin/subjects.php"><i class="fas fa-cog"></i> Enroll</a>
+                                  <a class="nav-link" id="hello" href="<?= site_url('Admin/enroll') ?>"  data-page="admin/subjects.php"><i class="fas fa-cog"></i> Enroll</a>
                               </li>
                               <li class="nav-item">
                                   <a class="nav-link"  id="hello" href="#"  data-page=""><i class="fas fa-envelope"></i> View Students</a>
