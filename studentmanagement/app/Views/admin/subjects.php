@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
+
 
 <head>
     <meta charset="UTF-8">
@@ -87,48 +86,6 @@
     </style>
 </head>
 
-<body>
-
-    <!-- Navigation Bar -->
-    <nav class="navbar navbar-dark fixed-top bg-dark">
-        <div class="navbar-brand m-0 p-2 h1">
-            Admin's Dashboard
-        </div>
-        <ul class="navbar-nav ms-auto p-2">
-            <li class="nav-item">
-                <a class="nav-link" href="<?= base_url('logout') ?>">Logout</a>
-            </li>
-        </ul>
-    </nav>
-
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="<?= site_url('Admin') ?>">Dashboard</a>
-        <a href="<?= site_url('Admin/create') ?>">Add Subject</a>
-        <a href="<?= site_url('Admin/View') ?>">Allocate Subjects</a>
-        <a href="<?= site_url('Admin/Performance') ?>">Performance</a>
-
-
-    </div>
-
-    <!-- Main Content -->
-    <div class="container-fluid " style="width:70rem">
-        <div class="height: 23rem">
-            <br>
-            <br>
-        </div>
-
-
-        <div class="card my-5 m-3" style="width: 65rem;">
-            <div class="card-body">
-                <h5 class="card-title">Welcome,
-                    <?= session()->get('Name') ?>!
-                </h5>
-                <p class="card-text">You can manage Teachers, students, subjects, announcements, results, and more
-                    from this
-                    dashboard.</p>
-            </div>
-        </div>
         <div class="content">
             <?php
             if (!empty(session()->getFlashdata("success"))) {
