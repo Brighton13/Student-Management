@@ -18,7 +18,11 @@
             bottom: 0;
             width: 100%;
         }
+        .offcanvas-open .container-fluid {
+            transform: translateX(250px);
+        }
 
+       
 </style>
 </head>
   <body>
@@ -44,10 +48,10 @@
                       <div class="collapse" id="submenu1">
                           <ul class="nav flex-column">
                               <li class="nav-item">
-                                  <a class="nav-link" href="<?= site_url('Admin/hire') ?>"  data-page="<?= site_url('Admin/hire') ?>">   <i class="fas fa-cog"></i> Add Teacher</a>
+                                  <a class="nav-link" id="hello" href="<?= site_url('Admin/hire') ?>"  data-page="<?= site_url('Admin/hire') ?>">   <i class="fas fa-cog"></i> Add Teacher</a>
                               </li>
                               <li class="nav-item">
-                                  <a class="nav-link" href="#"  data-page="">   <i class="fas fa-envelope"></i> View Teachers</a>
+                                  <a class="nav-link" id="hello" href="#"  data-page="">   <i class="fas fa-envelope"></i> View Teachers</a>
                               </li>
                             </li>
                               
