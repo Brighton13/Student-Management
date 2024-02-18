@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher's Dashboard</title>
+    <title>Admin's Dashboard</title>
 
     <!-- Bootstrap CSS -->
     <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet"
@@ -30,7 +30,6 @@
             padding-top: 56px;
             /* Adjust based on your navbar height */
             color: #fff;
-            overflow: auto;
         }
 
         .sidebar a {
@@ -46,8 +45,8 @@
         }
 
         .container-fluid {
-            padding-left: 240px;
-            /* Adjusted padding for larger screens */
+            margin-left: 220px;
+            /* Adjust based on your sidebar width */
         }
 
         .content {
@@ -69,15 +68,20 @@
         }
 
         /* Adjustments for responsiveness */
-        @media (max-width: 992px) {
-            .container-fluid {
-                padding-left: 0;
-            }
-
+        @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 position: static;
                 padding-top: 56px;
+                /* Adjust based on your navbar height */
+            }
+
+            .container-fluid {
+                margin-left: 0;
+            }
+
+            .card {
+                width: 100%;
             }
         }
     </style>
@@ -88,7 +92,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-dark fixed-top bg-dark">
         <div class="navbar-brand m-0 p-2 h1">
-            Teacher's Dashboard
+            Admin's Dashboard
         </div>
         <ul class="navbar-nav ms-auto p-2">
             <li class="nav-item">
@@ -99,57 +103,65 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="<?= site_url('User') ?>">Dashboard</a>
-        <a href="<?= site_url('User/enroll') ?>">Students</a>
-        <a href="<?= site_url('User/results') ?>">Results</a>
-        <a href="<?= site_url('User/announcement') ?>">Announcements</a>
-        <a href="#">Assignment</a>
-        <a href="#"></a>
+        <a href="<?= site_url('Admin') ?>">Dashboard</a>
+        <a href="<?= site_url('Admin/hire') ?>" class="active">Hire New Teacher</a>
+        <a href="<?= site_url('Admin/classes') ?>">Class Allocation</a>
+        <a href="<?= site_url('User/announcement') ?>">Create Announcements</a>
+        <a href="<?= site_url('Admin/results') ?>">Publish Results</a>
+        <a href="<?= site_url('Admin/students') ?>">Subjects Allocation</a>
     </div>
 
-    <!-- Main Content -->
-    <div class="container-fluid my-5">
-        <div class="content">
 
-            <div class="card my-5">
+    <!-- Main Content -->
+    <div class="container-fluid ">
+        <div class="content m-3">
+            <div class="card m-5" style="width: 65rem;">
                 <div class="card-body">
                     <h5 class="card-title">Welcome,
                         <?= session()->get('Name') ?>!
                     </h5>
-                    <p class="card-text">You can manage students, subjects, announcements, results, and more from
-                        this
+                    <p class="card-text">You can manage teachers, students, subjects, announcements, results, and more
+                        from this
                         dashboard.</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="card m-2 col-md-5 overflow-auto" style="width: 32rem; max-height: 400px;">
+
+
+
+            <div class="container d-flex justify-content-center align-items-center m-0">
+
+                <div class="card p-2 m-0" style="width: 65rem; ">
+                    <!-- Logo -->
+                    <h3>Announcement Form</h3>
+
                     <div class="card-body">
-                        <h5 class="card-title">Announcements</h5>
+                        <form method="post" action="<?= site_url('Admin/announcement') ?>"
+                            enctype="multipart/form-data">
+                            <?php csrf_field() ?>
 
-                        <?php
-                        $announcements = array_reverse($announcements);
-
-                        foreach ($announcements as $announcement): ?>
-                            <div class="card mb-2" style="background-color: #e6f7ff;">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">
-                                        <?= strtoupper($announcement->Title) ?>
-                                    </h6>
-                                    <a href="<?= base_url('User/announcement/' . $announcement->ID) ?>"
-                                        class="btn btn-primary" target="_blank">Read Full Announcement</a>
-                                </div>
+                            <div class="mb-3">
+                                <input type="text" class="form-control" name="description"
+                                    value="<?= set_value('description') ?>" placeholder=" Enter announcement title">
+                                <span class="text-danger text-sm">
+                                    <?= isset($validation) ? display_form_errors($validation, 'Address') : "" ?>
+                                </span>
                             </div>
-                        <?php endforeach; ?>
-                    </div>
-                </div>
-                <div class="card m-2 col-md-5" style="width: 32rem; max-height: 400px;">
-                    <div class="card-body">
-                        <h5 class="card-title">My Students</h5>
-                        <canvas id="performanceChart2" width="400" height="400"></canvas>
+                            <div class="mb-3">
+                                <input type="file" class="form-control" name="file">
+                                <span class="text-danger text-sm">
+                                    <?= isset($validation) ? display_form_errors($validation, 'file') : "" ?>
+                                </span>
+                            </div>
+
+
+                            <button type="submit" class="btn btn-success w-100">Announce</button>
+
+
+                        </form>
+
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 

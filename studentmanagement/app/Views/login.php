@@ -7,7 +7,8 @@
     <title>Login</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet">
 </head>
 
 <body>
@@ -43,18 +44,18 @@
                 <form method="post" action="<?= base_url('login') ?>">
                     <?php csrf_field() ?>
                     <div class="mb-3">
-                        <input type="text" class="form-control" name="StudentID" value="<?= set_value('StudentID') ?>"
+                        <input type="text" class="form-control" name="identity" value="<?= set_value('identity') ?>"
                             placeholder=" Enter your Id">
                         <span class="text-danger text-sm">
-                            <?= isset($validation) ? display_form_errors($validation, 'StudentID') : "" ?>
+                            <?= isset($validation) ? display_form_errors($validation, 'identity') : "" ?>
                         </span>
                     </div>
 
                     <div class="mb-3">
-                        <input type="password" class="form-control" name="Password" value="<?= set_value('Password') ?>"
-                            placeholder=" Enter Password">
+                        <input type="password" class="form-control" name="password" value="<?= set_value('password') ?>"
+                            placeholder=" Enter your Password">
                         <span class="text-danger text-sm">
-                            <?= isset($validation) ? display_form_errors($validation, 'Password') : "" ?>
+                            <?= isset($validation) ? display_form_errors($validation, 'password') : "" ?>
                         </span>
                     </div>
 

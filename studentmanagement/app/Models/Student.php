@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Result extends Model
+class Student extends Model
 {
-    protected $table = 'results';
-    protected $primaryKey = 'id';
+    protected $table = 'students';
+    protected $primaryKey = 'userID';
     protected $useAutoIncrement = true;
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['student_id', 'subject_id', 'score', 'Date'];
+    protected $allowedFields = ['Name', 'identity', 'Age', 'grade_id', 'Address', 'Phone', 'Email', 'Password', 'ConfirmPassword', 'DateEnrolled', 'Role' => 'Student'];
 
     // Dates
     protected $useTimestamps = false;

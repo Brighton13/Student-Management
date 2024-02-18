@@ -4,7 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher's Dashboard</title>
+
+    <title>Grade
+        <?php echo session()->get('grade_id') ?> Pupils
+    </title>
+
 
     <!-- Bootstrap CSS -->
     <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet"
@@ -30,7 +34,6 @@
             padding-top: 56px;
             /* Adjust based on your navbar height */
             color: #fff;
-            overflow: auto;
         }
 
         .sidebar a {
@@ -46,8 +49,8 @@
         }
 
         .container-fluid {
-            padding-left: 240px;
-            /* Adjusted padding for larger screens */
+            margin-left: 220px;
+            /* Adjust based on your sidebar width */
         }
 
         .content {
@@ -69,15 +72,20 @@
         }
 
         /* Adjustments for responsiveness */
-        @media (max-width: 992px) {
-            .container-fluid {
-                padding-left: 0;
-            }
-
+        @media (max-width: 768px) {
             .sidebar {
                 width: 100%;
                 position: static;
                 padding-top: 56px;
+                /* Adjust based on your navbar height */
+            }
+
+            .container-fluid {
+                margin-left: 0;
+            }
+
+            .card {
+                width: 100%;
             }
         }
     </style>
@@ -100,56 +108,63 @@
     <!-- Sidebar -->
     <div class="sidebar">
         <a href="<?= site_url('User') ?>">Dashboard</a>
-        <a href="<?= site_url('User/enroll') ?>">Students</a>
-        <a href="<?= site_url('User/results') ?>">Results</a>
-        <a href="<?= site_url('User/announcement') ?>">Announcements</a>
-        <a href="#">Assignment</a>
-        <a href="#"></a>
+        <a href="<?= site_url('User/enroll') ?>">Enroll Students</a>
+        <a href="<?= site_url('User/results') ?>">Enter Results</a>
+        <a href="<?= site_url('User/announcement') ?>">Create Announcements</a>
+        <a href="#">Publish Results</a>
+        <a href="#">Subjects Allocation</a>
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid my-5">
-        <div class="content">
-
-            <div class="card my-5">
+    <div class="container-fluid" style="width:70rem">
+        <div class="content my-5">
+            <div class="card my-5" style="width: 65rem;">
                 <div class="card-body">
                     <h5 class="card-title">Welcome,
                         <?= session()->get('Name') ?>!
                     </h5>
-                    <p class="card-text">You can manage students, subjects, announcements, results, and more from
-                        this
+                    <p class="card-text">You can manage students, subjects, announcements, results, and more from this
                         dashboard.</p>
                 </div>
             </div>
-            <div class="row">
-                <div class="card m-2 col-md-5 overflow-auto" style="width: 32rem; max-height: 400px;">
-                    <div class="card-body">
-                        <h5 class="card-title">Announcements</h5>
-
+            <div class="container m-0">
+                <h2>Grade
+                    <?php echo session()->get('grade_id') ?> Pupils
+                </h2>
+                <table class="table table-bordered" style="width: 65rem">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Actions</th>
+                            <!-- Add other columns as needed -->
+                        </tr>
+                    </thead>
+                    <tbody>
                         <?php
-                        $announcements = array_reverse($announcements);
 
-                        foreach ($announcements as $announcement): ?>
-                            <div class="card mb-2" style="background-color: #e6f7ff;">
-                                <div class="card-body">
-                                    <h6 class="card-subtitle mb-2 text-muted">
-                                        <?= strtoupper($announcement->Title) ?>
-                                    </h6>
-                                    <a href="<?= base_url('User/announcement/' . $announcement->ID) ?>"
-                                        class="btn btn-primary" target="_blank">Read Full Announcement</a>
-                                </div>
-                            </div>
+
+                        foreach ($students as $pupil):
+                            ?>
+                            <tr>
+                                <td>
+                                    <?= $pupil->identity ?>
+                                </td>
+                                <td>
+                                    <?= $pupil->Name ?>
+                                </td>
+                                <td>
+                                    <a href="<?= base_url('User/results/' . $pupil->identity) ?>"
+                                        class="btn btn-success">Enter
+                                        Results</a>
+                                </td>
+
+                                <!-- Add other columns as needed -->
+                            </tr>
                         <?php endforeach; ?>
-                    </div>
-                </div>
-                <div class="card m-2 col-md-5" style="width: 32rem; max-height: 400px;">
-                    <div class="card-body">
-                        <h5 class="card-title">My Students</h5>
-                        <canvas id="performanceChart2" width="400" height="400"></canvas>
-                    </div>
-                </div>
+                    </tbody>
+                </table>
             </div>
-
         </div>
     </div>
 

@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Result extends Model
+class TeacherGrade extends Model
 {
-    protected $table = 'results';
+    protected $table = 'teachergrades';
     protected $primaryKey = 'id';
     protected $useAutoIncrement = true;
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['student_id', 'subject_id', 'score', 'Date'];
+    protected $allowedFields = ['teacher_id', 'grade_id'];
 
     // Dates
     protected $useTimestamps = false;

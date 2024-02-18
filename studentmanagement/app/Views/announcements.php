@@ -7,7 +7,7 @@
     <title>Teacher's Dashboard</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <!-- Custom CSS -->
@@ -103,7 +103,7 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="#" class="active">Dashboard</a>
+        <a href="<?= site_url('User') ?>" class="active">Dashboard</a>
         <a href="<?= site_url('User/enroll') ?>">Enroll Students</a>
         <a href="#">Add Subjects</a>
         <a href="<?= site_url('User/Announcement') ?>">Create Announcements</a>
@@ -112,9 +112,9 @@
     </div>
 
     <!-- Main Content -->
-    <div class="container-fluid">
-        <div class="content">
-            <div class="card my-5" style="width: 65rem;">
+    <div class="container-fluid ">
+        <div class="content m-3">
+            <div class="card m-5" style="width: 65rem;">
                 <div class="card-body">
                     <h5 class="card-title">Welcome,
                         <?= session()->get('Name') ?>!
@@ -126,9 +126,9 @@
 
 
 
-            <div class="container d-flex justify-content-center align-items-center vh-100">
+            <div class="container d-flex justify-content-center align-items-center m-0">
 
-                <div class="card" style="width: 60rem;">
+                <div class="card p-2 m-0" style="width: 65rem; ">
                     <!-- Logo -->
                     <h3>Announcement Form</h3>
 

@@ -3,7 +3,10 @@
 namespace App\Controllers;
 
 use App\Libraries\Hash;
-use App\Models\User;
+use App\Models\Logindetails;
+use App\Models\Student;
+use App\Models\Teacher;
+use App\Models\TeacherGrade;
 
 
 //use CodeIgniter\Validation\Validation;
@@ -27,36 +30,47 @@ class Home extends BaseController
         if ($this->request->is('post')) {
 
             $rules = [
-                'StudentID' => [
-                    'rules' => ['required'],
-                    'errors' => ['The Identity Number is Required'],
-                ],
-                'Password' => 'required|min_length[8]'
+                'identity' => 'required',
+                'password' => 'required|min_length[8]'
             ];
 
             if ($this->validate($rules)) {
 
-                $userid = $this->request->getPost('StudentID');
-                $password = $this->request->getPost('Password');
+                $userid = $this->request->getPost('identity');
+                $password = $this->request->getPost('password');
 
                 $data = [
-                    'StudentID' => $userid,
-                    'Password' => Hash::encrypt($password)
+                    'identity' => $userid,
+                    'password' => Hash::encrypt($password)
                 ];
 
-                $user = new User();
-                $query = $user->where('StudentID', $userid)->first();
+                $user = new Logindetails();
+                $Student = new Student();
+                $Teacher = new Teacher();
 
-                // Assuming you have a sessionValues method defined
-                $this->sessionValues($query);
+                $query = $user->where('identity', $userid)->first();
+                $checkstudent = $Student->where('identity', $userid)->first();
+                $checkTeacher = $Teacher->where('identity', $userid)->first();
 
-                if ($query && password_verify($password, $query->Password)) {
 
-                    if ($query->role == "Admin") {
+                if ($query) {
+                    if ($checkstudent && $query->identity === $checkstudent->identity) {
+                        $this->sessionValues($checkstudent);
+                    } else if ($checkTeacher && $query->identity === $checkTeacher->identity) {
+                        $this->sessionValues($checkTeacher);
+                    } else {
+                        // Handle the case when neither student nor teacher is found
+                        // Perhaps show an error message or redirect to an error page
+                    }
+                }
+
+                if ($query && password_verify($password, $query->password)) {
+
+                    if ($query->Role == "Admin") {
                         return redirect()->to("Admin")->with('success', 'Login was successful');
-                    } else if ($query->role == 'User') {
+                    } else if ($query->Role == 'User') {
                         return redirect()->to("User")->with('success', 'Login was successful');
-                    } else if ($query->role == 'Student') {
+                    } else if ($query->Role == 'Student') {
                         return redirect()->to("Student")->with('success', 'Login was successful');
                     }
 
@@ -77,24 +91,57 @@ class Home extends BaseController
 
     public function sessionValues($user)
     {
-        if ($user) {
+        if ($user && ($user->Role == 'User' || $user->Role == 'Admin')) {
+
+            $teachergrade = new TeacherGrade();
+            $find = $teachergrade->where('teacher_id', $user->identity)->first();
+            if ($find) {
+                $data = [
+                    'identity' => $user->identity,
+                    'Name' => $user->Name,
+                    'Age' => $user->Age,
+                    'Address' => $user->Address,
+                    'Phone' => $user->Phone,
+                    'Email' => $user->Email,
+                    'Role' => $user->Role,
+                    'IsLoggedIn' => true,
+                    'grade_id' => $find->grade_id
+                ];
+                session()->set($data);
+
+            } else {
+                $data = [
+                    'identity' => $user->identity,
+                    'Name' => $user->Name,
+                    'Age' => $user->Age,
+                    'Address' => $user->Address,
+                    'Phone' => $user->Phone,
+                    'Email' => $user->Email,
+                    'Role' => $user->Role,
+                    'IsLoggedIn' => true,
+                ];
+                session()->set($data);
+
+            }
+
+        } else {
             $data = [
-                'StudentID' => $user->StudentID,
+                'identity' => $user->identity,
                 'Name' => $user->Name,
                 'Age' => $user->Age,
-                'Grade' => $user->Grade,
                 'Address' => $user->Address,
                 'Phone' => $user->Phone,
                 'Email' => $user->Email,
                 'Role' => $user->Role,
-                'IsLoggedIn' => true
+                'IsLoggedIn' => true,
             ];
             session()->set($data);
+
         }
 
-        return redirect()->to('login')->with('error', 'User does not exist');
 
     }
+
 
     public function logout()
     {

@@ -9,10 +9,10 @@ class Subject extends Model
     protected $table = 'subjects';
     protected $primaryKey = 'ID';
     protected $useAutoIncrement = true;
-    protected $returnType = 'Object';
+    protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Name', 'SubjectCode'];
+    protected $allowedFields = ['Name', 'SubjectCode', 'grade_id'];
 
     // Dates
     protected $useTimestamps = false;

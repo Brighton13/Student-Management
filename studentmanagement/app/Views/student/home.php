@@ -7,7 +7,7 @@
     <title>Student Home Page</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet"
         integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 
     <style>
@@ -165,7 +165,7 @@
                     <img src="<?= base_url('images/logo.png') ?>" alt="Profile" class="rounded-circle" width="40"
                         height="40">
                     <h2 class="h2 text-color-l">
-                        <?= session()->get('StudentID') ?>
+                        <?= session()->get('identity') ?>
                     </h2>
                 </div>
             </div>
@@ -173,21 +173,22 @@
 
             <!-- Announcements Section -->
             <div class="announcements-section">
-                <?php foreach ($announcements as $announcement): ?>
+                <?php
+                // Reverse the order of announcements
+                $announcements = array_reverse($announcements);
 
+                foreach ($announcements as $announcement):
+                    ?>
                     <div class="alert alert-success d-flex" role="alert">
-
                         <p><b>
-                                <?= $announcement->Title ?>
-                            </b> </p>
+                                <?= strtoupper($announcement->Title) ?>
+                            </b></p>
                         <a href="<?= base_url('Student/announcement/' . $announcement->ID) ?>"
-                            class="btn btn-primary btn-at-end">Open
-                            Document</a>
-
+                            class="btn btn-primary btn-at-end">Open Document</a>
                     </div>
-
                 <?php endforeach; ?>
             </div>
+
 
 
         </main>

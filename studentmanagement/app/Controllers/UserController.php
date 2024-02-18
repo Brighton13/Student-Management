@@ -4,8 +4,12 @@ namespace App\Controllers;
 
 use App\Controllers\BaseController;
 use App\Models\Announcements;
+use App\Models\Grade;
+use App\Models\Result;
+use App\Models\Student;
+use App\Models\TeacherGrade;
 use App\Models\Subject;
-use App\Models\User;
+use App\Models\Logindetails;
 use App\Libraries\Hash;
 
 class UserController extends BaseController
@@ -18,7 +22,11 @@ class UserController extends BaseController
 
     public function index()
     {
-        return view("user/dashboard");
+        $announcements = new Announcements();
+        $data = [
+            'announcements' => $announcements->findAll(),
+        ];
+        return view("user/dashboard", $data);
     }
 
     protected function StudentIDgenerator()
@@ -35,10 +43,15 @@ class UserController extends BaseController
     public function EnrollStudent()
     {
 
-
         if ($this->request->is("get")) {
+
+            $grade = new Grade();
+
+            $grades = $grade->findAll();
+
             $data = [
-                'StudentID' => $this->StudentIDgenerator()
+                'identity' => $this->StudentIDgenerator(),
+                'Grades' => $grades
             ];
 
             return view("user/enroll", $data);
@@ -53,7 +66,7 @@ class UserController extends BaseController
             "Address" => "required",
             'Phone' => 'required|max_length[15]',
             "Grade" => "required",
-            'StudentID' => 'is_unique[users.StudentID]'
+            'identity' => 'is_unique[students.identity]'
         ];
 
         if ($this->Validate($rules)) {
@@ -63,24 +76,37 @@ class UserController extends BaseController
             $Address = $this->request->getPost('Address');
             $Phone = $this->request->getPost('Phone');
             $Grade = $this->request->getPost('Grade');
-            // $studentid = $this->request->getPost('StudentID');
+            $identity = $this->request->getPost('identity');
+            $gender = $this->request->getPost('Gender');
 
             $data = [
-                "StudentID" => $this->StudentIDgenerator(),
+                "identity" => $identity,
                 "Name" => $name,
                 "Age" => $Age,
                 "Email" => $email,
                 "Address" => $Address,
                 'Phone' => $Phone,
-                "Grade" => $Grade,
+                "grade_id" => $Grade,
                 'Password' => Hash::encrypt('test1234'),  // You might want to use hashed passwords in a real scenario
                 'ConfirmPassword' => Hash::encrypt('test1234'),
                 'Role' => "Student",
+                "Gender" => $gender
             ];
 
-            $Student = new User();
+            $Student = new Student();
 
             $query = $Student->insert($data);
+
+
+            $logindetails = new Logindetails();
+
+            $logindata = [
+                "identity" => $identity,
+                'password' => Hash::encrypt('test1234'),
+                'Role' => 'Student'
+            ];
+
+            $logindetails->insert($logindata);
 
             if ($query === false) {
                 return redirect()->to("user/enroll")->with("error", "Student Enrollment Failed");
@@ -170,9 +196,82 @@ class UserController extends BaseController
 
     }
 
+    public function viewClasspupils()
+    {
+        $students = new Student();
 
+        $sessionvalues = session()->get('grade_id');
+
+        // var_dump($sessionvalues);
+
+        $query = $students->where('grade_id', $sessionvalues)->findAll();
+
+        $data = [
+            'students' => $query
+        ];
+        return view('user/gradepupils', $data);
+
+    }
+
+    public function EnterResults($userid)
+    {
+        $studentModel = new Student();
+        $subjectModel = new Subject();
+
+        // Retrieve student and subjects again for the view
+        $student = $studentModel->where('identity', $userid)->first();
+        $subjects = $subjectModel->findAll();
+
+        $data = [
+            'student' => $student,
+            'subjects' => $subjects
+        ];
+
+        return view('user/enterresults', $data);
+    }
+
+
+    public function EnterRResults()
+    {
+        // var_dump($this->request->getPost());
+
+        if ($this->request->is('post')) {
+            $validation = \Config\Services::validation();
+
+            $student = new Student();
+            $subject = new Subject();
+            $Results = new Result();
+
+            // Assuming you have already validated the form data using $validation
+
+            $studentid = $this->request->getPost('student_id');
+            $student = $student->where('identity', $studentid)->first();
+            $subjects = $subject->findAll();
+            //var_dump($studentid);
+            foreach ($subjects as $subject) {
+                if ($subject->grade_id === $student->grade_id) {
+                    $score = $this->request->getPost('Score_' . $subject->ID);
+                    //  echo "Subject ID: {$subject->ID}, Score: {$score}<br>";
+
+                    $data = [
+                        'student_id' => $studentid,
+                        'subject_id' => $subject->ID,
+                        'score' => $score
+                    ];
+
+                    $Results->insert($data);
+
+                    return redirect()->to('User/results')->with('success', 'Results Recorded successfully.');
+                }
+            }
+
+
+        }
+    }
 
 }
+
+
 
 
 

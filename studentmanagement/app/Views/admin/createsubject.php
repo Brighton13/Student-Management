@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teacher's Dashboard</title>
+    <title>Create Subject</title>
 
     <!-- Bootstrap CSS -->
     <link href="<?= base_url('bootstrap\dist\css\bootstrap.min.css') ?>" rel="stylesheet"
@@ -92,7 +92,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar navbar-dark fixed-top bg-dark">
         <div class="navbar-brand m-0 p-2 h1">
-            Teacher's Dashboard
+            Admin's Dashboard
         </div>
         <ul class="navbar-nav ms-auto p-2">
             <li class="nav-item">
@@ -103,87 +103,57 @@
 
     <!-- Sidebar -->
     <div class="sidebar">
-        <a href="<?= site_url('User') ?>">Dashboard</a>
-        <a href="<?= site_url('User/enroll') ?>">Enroll Students</a>
-        <a href="<?= site_url('User/results') ?>">Enter Results</a>
+        <a href="<?= site_url('Admin') ?>">Dashboard</a>
+        <a href="<?= site_url('Admin/hire') ?>" class="active">Hire New Teacher</a>
+        <a href="<?= site_url('Admin/classes') ?>">Class Allocation</a>
         <a href="<?= site_url('User/announcement') ?>">Create Announcements</a>
-        <a href="#">Publish Results</a>
-        <a href="#">Subjects Allocation</a>
+        <a href="<?= site_url('Admin/results') ?>">Publish Results</a>
+        <a href="<?= site_url('Admin/students') ?>">Subjects Allocation</a>
     </div>
 
+
     <!-- Main Content -->
-    <div class="container-fluid my-5" style="width:70rem">
-        <div class="content">
-
-
-            <div class="card my-5" style="width: 65rem;">
+    <div class="container-fluid ">
+        <div class="content m-3">
+            <div class="card m-5" style="width: 65rem;">
                 <div class="card-body">
                     <h5 class="card-title">Welcome,
                         <?= session()->get('Name') ?>!
                     </h5>
-                    <p class="card-text">You can manage students, subjects, announcements, results, and more from this
+                    <p class="card-text">You can manage teachers, students, subjects, announcements, results, and more
+                        from this
                         dashboard.</p>
                 </div>
             </div>
 
 
-            <div class="container d-flex justify-content-center align-items-center vh-100">
-                <div class="card m-0 p-3" style="width: 65rem;">
+
+            <div class="container d-flex justify-content-center align-items-center m-0">
+
+                <div class="card p-2 m-0" style="width: 65rem; ">
                     <!-- Logo -->
-                    <h3>Student Enrollment Form</h3>
+                    <h3>Subject Creation Form</h3>
 
                     <div class="card-body">
-                        <form method="post" action="<?= site_url('User/enroll') ?>">
+                        <form method="post" action="<?= site_url('Admin/create') ?>">
                             <?php csrf_field() ?>
-                            <div class="row">
-                                <div class="col-md-4 mb-3">
-                                    <input type="text" class="form-control" name="identity"
-                                        value="<?= set_value('identity', $identity) ?>">
-                                    <span class="text-danger text-sm">
-                                        <?= isset($validation) ? display_form_errors($validation, 'identity') : "" ?>
-                                    </span>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <input type="text" class="form-control" name="Name" value="<?= set_value('Name') ?>"
-                                        placeholder=" Enter FullName">
-                                    <span class="text-danger text-sm">
-                                        <?= isset($validation) ? display_form_errors($validation, 'Name') : "" ?>
-                                    </span>
-                                </div>
-
-                                <div class="col-md-4 mb-3">
-                                    <input type="Email" class="form-control" name="Email"
-                                        value="<?= set_value('Email') ?>" placeholder=" Enter Email">
-                                    <span class="text-danger text-sm">
-                                        <?= isset($validation) ? display_form_errors($validation, 'Email') : "" ?>
-                                    </span>
-                                </div>
-                            </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="Age" value="<?= set_value('Age') ?>"
-                                    placeholder=" Enter Age">
+                                <input type="text" class="form-control" name="Name"
+                                    value="<?= set_value('description') ?>" placeholder=" subject name">
                                 <span class="text-danger text-sm">
-                                    <?= isset($validation) ? display_form_errors($validation, 'Age') : "" ?>
+                                    <?= isset($validation) ? display_form_errors($validation, 'Name') : "" ?>
                                 </span>
                             </div>
                             <div class="mb-3">
-                                <input type="text" class="form-control" name="Address"
-                                    value="<?= set_value('Address') ?>" placeholder=" Enter Home Address">
+                                <input type="text" class="form-control" name="SubjectCode"
+                                    value="<?= set_value('description') ?>" placeholder=" subject code">
                                 <span class="text-danger text-sm">
-                                    <?= isset($validation) ? display_form_errors($validation, 'Address') : "" ?>
-                                </span>
-                            </div>
-                            <div class="mb-3">
-                                <input type="text" class="form-control" name="Phone" value="<?= set_value('Phone') ?>"
-                                    placeholder=" Enter Phone">
-                                <span class="text-danger text-sm">
-                                    <?= isset($validation) ? display_form_errors($validation, 'Phone') : "" ?>
+                                    <?= isset($validation) ? display_form_errors($validation, 'SubjectCode') : "" ?>
                                 </span>
                             </div>
                             <div class="mb-3">
                                 <label for="Grade" class="form-label">Grade:</label>
-                                <select class="form-select" name="Grade" required>
+                                <select class="form-select" name="grade_id" required>
                                     <?php foreach ($Grades as $grade): ?>
                                         <option value="<?= $grade->ID ?>" <?= set_select('Grade', $grade->ID) ?>>
                                             <?= $grade->name ?>
@@ -196,14 +166,14 @@
                             </div>
 
 
-                            <!-- Remaining input fields go here -->
+                            <button type="submit" class="btn btn-success w-100">Add Subject</button>
 
-                            <button type="submit" class="btn btn-success w-100">Enroll Student</button>
+
                         </form>
+
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
