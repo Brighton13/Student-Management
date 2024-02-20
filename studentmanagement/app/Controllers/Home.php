@@ -13,6 +13,7 @@ use App\Models\TeacherGrade;
 
 class Home extends BaseController
 {
+   
     public function __construct()
     {
 
@@ -20,10 +21,14 @@ class Home extends BaseController
     }
 
 
+
+
     public function index()
     {
         return view("login");
     }
+
+
 
     public function login()
     {
@@ -37,18 +42,20 @@ class Home extends BaseController
     
             if ($this->validate($rules)) {
                 $userid = $this->request->getPost('identity');
-                $password = $this->request->getPost('password');
+                $Password = $this-> request->getPost('password');
+              //  $password = $this->request->getPost('password');
     
                 // Call the stored procedure to authenticate the user
                 $db = db_connect();
                 $sp = 'CALL sp_AuthenticateUser(?, ?)';
-                $query = $db->query($sp, array($userid, $password));
+                $query = $db->query($sp, array($userid,$Password));
     
                 $result = $query->getRow();
 
-            var_dump($result);
+//                var_dump($result);
+           
     
-              if ($result) {
+          if ($result) {
                     // Fetch user data
                     $firstName = $result->FirstName;
                     $lastName = $result->LastName;
@@ -60,20 +67,22 @@ class Home extends BaseController
                         'FirstName' => $firstName,
                         'LastName' => $lastName,
                         'Identity' => $identity,
-                        'Role' => $role
+                        'Role' => $role,
+                        'IsLoggedIn'=>true
                     ];
                     session()->set($sessiondata);
     
                     // Redirect users based on their role
                     if ($role == "Admin") {
-                        return redirect()->to("admin")->with('success', 'Login was successful');
-                    } else if ($role == 'User') {
-                        return redirect()->to("user")->with('success', 'Login was successful');
-                    } else if ($role == 'student') {
+                        return redirect()->to("Admin")->with('success', 'Login was successful');
+                    } else 
+                    if ($role == 'User') {
+                        return redirect()->to("User")->with('success', 'Login was successful');
+                    } else
+                    if ($role == 'Student') {
                         return redirect()->to("student")->with('success', 'Login was successful');
                     }
-                } 
-                
+                }                
                 else {
                     return redirect()->to('/')->with('error', 'Invalid credentials');
                 }
@@ -82,72 +91,15 @@ class Home extends BaseController
                 return view('login', ['validation' => $validation]);
             }
         
-    
         // If it's not a POST request, show login page
         return view('login');
     }}
     
 
 
-
-  /*  public function sessionValues($user)
- {
-    if ($user && ($user->Role == 'User' || $user->Role == 'Admin')) {
-
-        // Assuming the stored procedure returns the user's information in a result set
-        // and the user's information includes identity, Name, Age, Address, Phone, Email, Role
-        $identity = $user->identity;
-
-        // Call the stored procedure to get additional user information
-        $db = db_connect();
-        $sp = 'CALL GetUserAdditionalInfo(?)'; // Replace with the name of your stored procedure
-        $result = $db->query($sp, array($identity));
-
-        // Check if the stored procedure returned a result set
-        if ($result->getNumRows() > 0) {
-            $row = $result->getRow();
-            $name = $row->Name;
-            $age = $row->Age;
-            $address = $row->Address;
-            $phone = $row->Phone;
-            $email = $row->Email;
-            $role = $row->Role;
-
-            // Set session data
-            $data = [
-                'identity' => $identity,
-                'Name' => $name,
-                'Age' => $age,
-                'Address' => $address,
-                'Phone' => $phone,
-                'Email' => $email,
-                'Role' => $role,
-                'IsLoggedIn' => true,
-            ];
-            session()->set($data);
-        }
-
-    } else {
-        // Set session data without additional info
-        $data = [
-            'identity' => $user->identity,
-            'Name' => $user->Name,
-            'Age' => $user->Age,
-            'Address' => $user->Address,
-            'Phone' => $user->Phone,
-            'Email' => $user->Email,
-            'Role' => $user->Role,
-            'IsLoggedIn' => true,
-        ];
-        session()->set($data);
-    }
-            }*/
-
-
-
     public function logout()
     {
         session()->destroy();
-        return redirect()->to('login');
+        return redirect()->to('/');
     }
 }

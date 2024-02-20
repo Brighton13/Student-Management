@@ -68,22 +68,13 @@ class AdminController extends BaseController
         return view('admin/createannouncement');
 
     }*/
+
+
     public function index()
     {
-
-       /* $teachers = new Teacher();
-        $announcements = new Announcements();
-        $Subjects = new Subject();
-
-
-
-        $data = [
-            "teachers" => $teachers->findall(),
-            "announcements" => $announcements->findall(),
-            "Subjects" => $Subjects->findAll(),
-        ];*/
-        return view("admin/dashboard");//, $data);
+        return view("admin/dashboard");
     }
+
     protected function EmployeeIDGenerator()
     {
         $currentyear = date('Y') - 2000;
@@ -195,15 +186,15 @@ class AdminController extends BaseController
      if ($this->request->is('post')) {
  
          $rules = [
-             'identity' => 'is_unique[teacher_personal_information.identity]',
-             "DOB" => "required",
-             "firstName" => "required",
-             "lastName" => "required",
-             "nationality" => "required",
-             "age" => "required",
-             "gender" => "required",
-             "Email" => "required",
-             "address" => "required",
+             'Identity' => 'is_unique[teacher_personal_information.identity, logindetails.Identity]',
+             'DateOfBirth' => "required",
+             'FirstName' => "required",
+             'LastName' => "required",
+             'Nationality' => "required",
+             'Age' => "required",
+             'Gender' => "required",
+             'Email' => "required",
+             'HomeAddress' => "required",
              'PhoneOne' => 'required|max_length[15]',
              'PhoneTwo' => 'max_length[15]',
              'Document1' => 'required',
@@ -224,7 +215,7 @@ class AdminController extends BaseController
              $PhoneTwo = $this->request->getPost('PhoneTwo');
              $Document1 = $this->request->getPost('Document1');
              $Document2 = $this->request->getPost('Document2');
-             $Password = Hash::Encrypt($this-> request->getPost('Password'));
+             $Password = 'Zam@24';
              $Role = 'User';
 
              $db = db_connect();
@@ -232,27 +223,14 @@ class AdminController extends BaseController
              $sp2 ='CALL sp_AddLoginDetails(?,?,?)';
             
              
-             // Call the stored procedure to insert personal information
+             //insert Teacher personal information
              $db->query($sp1, array($identity,$firstName,$lastName,$age,$gender, $nationality,$address,$DOB));
+             //login details
              $db->query($sp2, array($identity,$Password,$Role));
  
              // Insert additional data into other tables as needed
              // You can call other stored procedures or use regular insert queries here
- $data=[
-  'identity'=>$identity,
-  'firstName'=>$firstName,
-  '$lastName'=>$lastName,
-  '$age'=>$age,
-  '$gender'=>$gender,
-   '$nationality'=> $nationality,
-   '$address'=>$address,
-   '$DOB'=>$DOB,
-   '$Password'=>$Password,
-   '$Role'=>$Role
-    
- ];
-        
- 
+      
  
  
            //  return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');

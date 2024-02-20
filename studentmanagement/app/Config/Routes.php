@@ -37,5 +37,7 @@ $routes->group('Student', ['filter' => 'Auth'], function ($routes) {
 });
 
 $routes->get('/', 'Home::index', ['filter' => 'NoAuth']);
+
 $routes->match(['get', 'post'], 'login', 'Home::login', ['filter' => 'NoAuth']);
-$routes->get('/logout', 'Home::logout', ['filter' => 'Auth']);
+
+$routes->get('logout', 'Home::logout', ['filter' => 'Auth']);

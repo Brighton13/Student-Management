@@ -22,11 +22,8 @@ class UserController extends BaseController
 
     public function index()
     {
-        $announcements = new Announcements();
-        $data = [
-            'announcements' => $announcements->findAll(),
-        ];
-        return view("user/dashboard", $data);
+       
+        return view("user/dashboard");
     }
 
    

@@ -32,64 +32,64 @@
             <div class="row mb-3">
                 <div class="col-md-6">
                     <label for="identity" class="form-label">Identity<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="identity" value="<?= set_value('identity', $identity) ?>">
+                    <input type="text" class="form-control" name="Identity" value="<?= set_value('Identity', $identity) ?>">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'identity') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Identity') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="DOB" class="form-label">Date Of Birth<span style="color: red;">*<span></label>
-                    <input type="date" class="form-control" name="DOB">
+                    <input type="date" class="form-control" name="DateOfBirth">
                     <span class="text-danger text-sm">
-                         <?= isset($validation) ? display_form_errors($validation, 'DOB') : "" ?>
+                         <?= isset($validation) ? display_form_errors($validation, 'DateOfBirth') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="firstName" placeholder="First Name">
+                    <input type="text" class="form-control" name="FirstName" placeholder="First Name">
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'firstName') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Last Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="lastName" placeholder="Last Name">
+                    <input type="text" class="form-control" name="LastName" placeholder="Last Name">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'lastName') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'LastName') : "" ?>
                     </span>
                 </div>
                 
                 <div class="col-md-6">
                     <label for="age" class="form-label">Age<span style="color: red;">*<span></label>
-                    <input type="number" class="form-control" name="age">
+                    <input type="number" class="form-control" name="Age">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'age') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Age') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="gender" class="form-label">Gender<span style="color: red;">*<span></label>
-                    <select name="gender" class="form-select">
+                    <select name="Gender" class="form-select">
                         <option selected disabled>Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'gender') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Gender') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="nationality" class="form-label">Nationality<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="nationality" placeholder="Nationality">
+                    <input type="text" class="form-control" name="Nationality" placeholder="Nationality">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'nationality') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Nationality') : "" ?>
                     </span>
                 </div>
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Home Address<span style="color: red;">*<span></label>
-                <textarea name="address" class="form-control" placeholder="Enter Home Address"></textarea>
+                <textarea name="HomeAddress" class="form-control" placeholder="Enter Home Address"></textarea>
                 <span class="text-danger text-sm">
-                    <?= isset($validation) ? display_form_errors($validation, 'address') : "" ?>
+                    <?= isset($validation) ? display_form_errors($validation, 'HomeAddress') : "" ?>
                 </span>
             </div>
         </div>
