@@ -8,7 +8,7 @@ use App\Models\Announcements;
 use App\Models\Grade;
 use App\Models\Logindetails;
 use App\Models\Subject;
-use App\Models\Teacher;
+use App\Models\TeacherPersonal;
 use App\Models\TeacherGrade;
 
 class AdminController extends BaseController
@@ -26,7 +26,7 @@ class AdminController extends BaseController
 
     }
 
-    public function Announcement()
+  /*  public function Announcement()
     {
 
         if ($this->request->is("post")) {
@@ -67,11 +67,11 @@ class AdminController extends BaseController
 
         return view('admin/createannouncement');
 
-    }
+    }*/
     public function index()
     {
 
-        $teachers = new Teacher();
+       /* $teachers = new Teacher();
         $announcements = new Announcements();
         $Subjects = new Subject();
 
@@ -81,8 +81,8 @@ class AdminController extends BaseController
             "teachers" => $teachers->findall(),
             "announcements" => $announcements->findall(),
             "Subjects" => $Subjects->findAll(),
-        ];
-        return view("admin/dashboard", $data);
+        ];*/
+        return view("admin/dashboard");//, $data);
     }
     protected function EmployeeIDGenerator()
     {
@@ -93,80 +93,183 @@ class AdminController extends BaseController
 
         return $employeeid;
     }
+    
+/*
+ public function EnrollStudent()
+ {
+
+     if ($this->request->is("get")) {
+
+         $grade = new Grade();
+
+         $grades = $grade->findAll();
+
+         $data = [
+             'identity' => $this->StudentIDgenerator(),
+             'Grades' => $grades
+         ];
+
+         return view("admin/enroll", $data);
+     }
+
+     $validation = \Config\Services::validation();
+
+     $rules = [
+         "Name" => "required",
+         "Age" => "required",
+         "Email" => "required|valid_email",
+         "Address" => "required",
+         'Phone' => 'required|max_length[15]',
+         "Grade" => "required",
+         'identity' => 'is_unique[students.identity]'
+     ];
+
+     if ($this->Validate($rules)) {
+         $name = $this->request->getPost('Name');
+         $email = $this->request->getPost('Email');
+         $Age = $this->request->getPost('Age');
+         $Address = $this->request->getPost('Address');
+         $Phone = $this->request->getPost('Phone');
+         $Grade = $this->request->getPost('Grade');
+         $identity = $this->request->getPost('identity');
+         $gender = $this->request->getPost('Gender');
+
+         $data = [
+             "identity" => $identity,
+             "Name" => $name,
+             "Age" => $Age,
+             "Email" => $email,
+             "Address" => $Address,
+             'Phone' => $Phone,
+             "grade_id" => $Grade,
+             'Password' => Hash::encrypt('test1234'),  // You might want to use hashed passwords in a real scenario
+             'ConfirmPassword' => Hash::encrypt('test1234'),
+             'Role' => "Student",
+             "Gender" => $gender
+         ];
+
+         $Student = new Student();
+
+         $query = $Student->insert($data);
 
 
-    public function HireTeacher()
-    {
-        $validation = \Config\Services::validation();
+         $logindetails = new Logindetails();
 
-        if ($this->request->is('post')) {
+         $logindata = [
+             "identity" => $identity,
+             'password' => Hash::encrypt('test1234'),
+             'Role' => 'Student'
+         ];
 
-            $rules = [
-                "Name" => "required",
-                "Age" => "required",
-                "Email" => "required",
-                "Address" => "required",
-                'Phone' => 'required|max_length[15]',
-                'identity' => 'is_unique[teachers.identity]'
+         $logindetails->insert($logindata);
 
-            ];
+         if ($query === false) {
+             return redirect()->to("admin/enroll")->with("error", "Student Enrollment Failed");
+         }
+         // var_dump($data);
+         return redirect()->to("admin/studentdetails")->with("success", "Student Enrollment Was Successful");
+     } else {
+         return view('admin/enroll', ['validation' => $validation]);
+     }
 
-            if ($this->Validate($rules)) {
-                $name = $this->request->getPost('Name');
-                $identity = $this->request->getPost('identity');
-                $email = $this->request->getPost('Email');
-                $Age = $this->request->getPost('Age');
-                $Address = $this->request->getPost('Address');
-                $Phone = $this->request->getPost('Phone');
-                $gender = $this->request->getPost('Gender');
+ } 
 
+ 
+ protected function StudentIDgenerator()
+ {
+     $currentyear = date('Y') - 2000;
+     $currentmonth = date('m');
+     $randomNumber = mt_rand(1000, 9999);
+     $studentid = $currentyear . $currentmonth . $randomNumber;
 
-                $data = [
-                    "identity" => $identity,
-                    "Name" => $name,
-                    "Age" => $Age,
-                    "Email" => $email,
-                    "Address" => $Address,
-                    'Phone' => $Phone,
-                    'Password' => Hash::encrypt('test1234'),  // You might want to use hashed passwords in a real scenario
-                    'ConfirmPassword' => Hash::encrypt('test1234'),
-                    'Role' => 'User',
-                    'Gender' => $gender
-                ];
+     return $studentid;
 
-                var_dump($data);
-
-                $teacher = new Teacher();
-
-                $teacher->insert($data);
+ }
+*/
 
 
-                $logindetails = new Logindetails();
+ public function HireTeacher()
+ {
+     $validation = \Config\Services::validation();
+ 
+     if ($this->request->is('post')) {
+ 
+         $rules = [
+             'identity' => 'is_unique[teacher_personal_information.identity]',
+             "DOB" => "required",
+             "firstName" => "required",
+             "lastName" => "required",
+             "nationality" => "required",
+             "age" => "required",
+             "gender" => "required",
+             "Email" => "required",
+             "address" => "required",
+             'PhoneOne' => 'required|max_length[15]',
+             'PhoneTwo' => 'max_length[15]',
+             'Document1' => 'required',
+             
+         ];
+ 
+         if ($this->validate($rules)) { // Corrected to `$this->validate` from `$this->Validate`
+             $identity = $this->request->getPost('Identity');
+             $DOB = $this->request->getPost('DateOfBirth');
+             $firstName = $this->request->getPost('FirstName');
+             $lastName = $this->request->getPost('LastName');
+             $nationality = $this->request->getPost('Nationality');
+             $age = $this->request->getPost('Age');
+             $gender = $this->request->getPost('Gender');
+             $Email = $this->request->getPost('Email');
+             $address = $this->request->getPost('HomeAddress');
+             $PhoneOne = $this->request->getPost('PhoneOne');
+             $PhoneTwo = $this->request->getPost('PhoneTwo');
+             $Document1 = $this->request->getPost('Document1');
+             $Document2 = $this->request->getPost('Document2');
+             $Password = Hash::Encrypt($this-> request->getPost('Password'));
+             $Role = 'User';
 
-                $logindata = [
-                    "identity" => $identity,
-                    'password' => Hash::encrypt('test1234'),
-                    'Role' => 'User'
-                ];
-
-                $logindetails->insert($logindata);
-
-
-                return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');
-
-            } else {
-                return redirect()->to('Admin')->with('error', 'Teacher was not registerd successfully');
-            }
-        }
-
-        $data1 = [
-            'validation' => $validation,
-            'identity' => $this->EmployeeIDGenerator(),
-        ];
-        //var_dump($data1);
-        return view('admin/hire', $data1);
-    }
-
+             $db = db_connect();
+             $sp1 = 'CALL sp_AddTeacher_Personal_Information(?,?,?,?,?,?,?,?)';
+             $sp2 ='CALL sp_AddLoginDetails(?,?,?)';
+            
+             
+             // Call the stored procedure to insert personal information
+             $db->query($sp1, array($identity,$firstName,$lastName,$age,$gender, $nationality,$address,$DOB));
+             $db->query($sp2, array($identity,$Password,$Role));
+ 
+             // Insert additional data into other tables as needed
+             // You can call other stored procedures or use regular insert queries here
+ $data=[
+  'identity'=>$identity,
+  'firstName'=>$firstName,
+  '$lastName'=>$lastName,
+  '$age'=>$age,
+  '$gender'=>$gender,
+   '$nationality'=> $nationality,
+   '$address'=>$address,
+   '$DOB'=>$DOB,
+   '$Password'=>$Password,
+   '$Role'=>$Role
+    
+ ];
+        
+ 
+ 
+ 
+           //  return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');
+         } else {
+             return redirect()->to('Admin')->with('error', 'Teacher was not registered successfully');
+         }
+     }
+ 
+     $data1 = [
+         'validation' => $validation,
+         'identity' => $this->EmployeeIDGenerator(),
+     ];
+ 
+     return view('admin/hire', $data1);
+ }
+ 
+/*
     public function ViewAnnouncement($id)
     {
         // $id = $this->request->getPost("ID");
@@ -336,7 +439,7 @@ class AdminController extends BaseController
 
         return view('admin/createsubject', $data);
     }
-
+*/
 
 }
 

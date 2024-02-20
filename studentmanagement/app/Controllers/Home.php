@@ -19,6 +19,7 @@ class Home extends BaseController
         helper(["url", "form"]);
     }
 
+
     public function index()
     {
         return view("login");
@@ -27,120 +28,121 @@ class Home extends BaseController
     public function login()
     {
         $validation = \Config\Services::validation();
+    
         if ($this->request->is('post')) {
-
             $rules = [
                 'identity' => 'required',
-                'password' => 'required|min_length[8]'
+                'password' => 'required|min_length[5]'
             ];
-
+    
             if ($this->validate($rules)) {
-
                 $userid = $this->request->getPost('identity');
                 $password = $this->request->getPost('password');
+    
+                // Call the stored procedure to authenticate the user
+                $db = db_connect();
+                $sp = 'CALL sp_AuthenticateUser(?, ?)';
+                $query = $db->query($sp, array($userid, $password));
+    
+                $result = $query->getRow();
 
-                $data = [
-                    'identity' => $userid,
-                    'password' => Hash::encrypt($password)
-                ];
-
-                $user = new Logindetails();
-                $Student = new Student();
-                $Teacher = new Teacher();
-
-                $query = $user->where('identity', $userid)->first();
-                $checkstudent = $Student->where('identity', $userid)->first();
-                $checkTeacher = $Teacher->where('identity', $userid)->first();
-
-
-                if ($query) {
-                    if ($checkstudent && $query->identity === $checkstudent->identity) {
-                        $this->sessionValues($checkstudent);
-                    } else if ($checkTeacher && $query->identity === $checkTeacher->identity) {
-                        $this->sessionValues($checkTeacher);
-                    } else {
-                        // Handle the case when neither student nor teacher is found
-                        // Perhaps show an error message or redirect to an error page
+            var_dump($result);
+    
+              if ($result) {
+                    // Fetch user data
+                    $firstName = $result->FirstName;
+                    $lastName = $result->LastName;
+                    $identity = $result->Identity;
+                    $role = $result->Role;
+    
+                    // Store user data in session
+                    $sessiondata = [
+                        'FirstName' => $firstName,
+                        'LastName' => $lastName,
+                        'Identity' => $identity,
+                        'Role' => $role
+                    ];
+                    session()->set($sessiondata);
+    
+                    // Redirect users based on their role
+                    if ($role == "Admin") {
+                        return redirect()->to("admin")->with('success', 'Login was successful');
+                    } else if ($role == 'User') {
+                        return redirect()->to("user")->with('success', 'Login was successful');
+                    } else if ($role == 'student') {
+                        return redirect()->to("student")->with('success', 'Login was successful');
                     }
+                } 
+                
+                else {
+                    return redirect()->to('/')->with('error', 'Invalid credentials');
                 }
-
-                if ($query && password_verify($password, $query->password)) {
-
-                    if ($query->Role == "Admin") {
-                        return redirect()->to("Admin")->with('success', 'Login was successful');
-                    } else if ($query->Role == 'User') {
-                        return redirect()->to("User")->with('success', 'Login was successful');
-                    } else if ($query->Role == 'Student') {
-                        return redirect()->to("Student")->with('success', 'Login was successful');
-                    }
-
-                } else {
-                    return redirect()->to('/')->with('error', 'Login failed');
-                }
-
-            } else {
+            }else {
+                // Validation failed, show login page with errors
                 return view('login', ['validation' => $validation]);
             }
-
-        }
+        
+    
+        // If it's not a POST request, show login page
         return view('login');
+    }}
+    
 
 
-    }
 
+  /*  public function sessionValues($user)
+ {
+    if ($user && ($user->Role == 'User' || $user->Role == 'Admin')) {
 
-    public function sessionValues($user)
-    {
-        if ($user && ($user->Role == 'User' || $user->Role == 'Admin')) {
+        // Assuming the stored procedure returns the user's information in a result set
+        // and the user's information includes identity, Name, Age, Address, Phone, Email, Role
+        $identity = $user->identity;
 
-            $teachergrade = new TeacherGrade();
-            $find = $teachergrade->where('teacher_id', $user->identity)->first();
-            if ($find) {
-                $data = [
-                    'identity' => $user->identity,
-                    'Name' => $user->Name,
-                    'Age' => $user->Age,
-                    'Address' => $user->Address,
-                    'Phone' => $user->Phone,
-                    'Email' => $user->Email,
-                    'Role' => $user->Role,
-                    'IsLoggedIn' => true,
-                    'grade_id' => $find->grade_id
-                ];
-                session()->set($data);
+        // Call the stored procedure to get additional user information
+        $db = db_connect();
+        $sp = 'CALL GetUserAdditionalInfo(?)'; // Replace with the name of your stored procedure
+        $result = $db->query($sp, array($identity));
 
-            } else {
-                $data = [
-                    'identity' => $user->identity,
-                    'Name' => $user->Name,
-                    'Age' => $user->Age,
-                    'Address' => $user->Address,
-                    'Phone' => $user->Phone,
-                    'Email' => $user->Email,
-                    'Role' => $user->Role,
-                    'IsLoggedIn' => true,
-                ];
-                session()->set($data);
+        // Check if the stored procedure returned a result set
+        if ($result->getNumRows() > 0) {
+            $row = $result->getRow();
+            $name = $row->Name;
+            $age = $row->Age;
+            $address = $row->Address;
+            $phone = $row->Phone;
+            $email = $row->Email;
+            $role = $row->Role;
 
-            }
-
-        } else {
+            // Set session data
             $data = [
-                'identity' => $user->identity,
-                'Name' => $user->Name,
-                'Age' => $user->Age,
-                'Address' => $user->Address,
-                'Phone' => $user->Phone,
-                'Email' => $user->Email,
-                'Role' => $user->Role,
+                'identity' => $identity,
+                'Name' => $name,
+                'Age' => $age,
+                'Address' => $address,
+                'Phone' => $phone,
+                'Email' => $email,
+                'Role' => $role,
                 'IsLoggedIn' => true,
             ];
             session()->set($data);
-
         }
 
-
+    } else {
+        // Set session data without additional info
+        $data = [
+            'identity' => $user->identity,
+            'Name' => $user->Name,
+            'Age' => $user->Age,
+            'Address' => $user->Address,
+            'Phone' => $user->Phone,
+            'Email' => $user->Email,
+            'Role' => $user->Role,
+            'IsLoggedIn' => true,
+        ];
+        session()->set($data);
     }
+            }*/
+
 
 
     public function logout()
