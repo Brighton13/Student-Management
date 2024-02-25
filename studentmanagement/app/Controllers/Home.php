@@ -52,9 +52,30 @@ class Home extends BaseController
         // Get user input
         $userid = $this->request->getPost('identity');
         $password = $this->request->getPost('password');
-    
-        // Call the stored procedure to authenticate the user
+
+
+        $logindetails = new Logindetails();
+
+        $user = $logindetails->where('identity', $userid)->first();
+        
+
+        // Check if user exists
+        if (!$user) {
+        return redirect()->to('/')->with('error', 'User not found');
+        }
+
+        // Verify password
+        if (!password_verify($password, $user->Password)) {
+        return redirect()->to('/')->with('error', 'Invalid password');
+        }
+         // Update the IsLoggedIn field in the database (optional)
         $db = db_connect();
+        $updateData = [
+              'IsLoggedIn' => true
+        ];
+        $db->table('logindetails')->where('Identity', $userid)->update($updateData);
+
+        // Call the stored procedure for user session data
         $sp = 'CALL sp_AuthenticateUser(?)';
         $query = $db->query($sp, array($userid));
         $result = $query->getRow();
@@ -69,17 +90,8 @@ class Home extends BaseController
         $identity = $result->Identity;
         $role = $result->Role;
         $IsloggedIn = true; // Set IsLoggedIn to true
-    
-        // Verify password
-        if (!password_verify($password, $result->Password)) {
-            return redirect()->to('/')->with('error', 'Invalid password');
-        }
-    
-        // Update the IsLoggedIn field in the database
-        $updateData = [
-            'IsLoggedIn' => true
-        ];
-        $db->table('logindetails')->where('Identity', $identity)->update($updateData);
+        
+
     
         // Store user data in session
         $sessiondata = [
@@ -87,7 +99,7 @@ class Home extends BaseController
             'LastName' => $lastName,
             'Identity' => $identity,
             'Role' => $role,
-            'IsLoggedIn' => true
+            'IsLoggedIn' => $IsloggedIn
         ];
     
         session()->set($sessiondata);

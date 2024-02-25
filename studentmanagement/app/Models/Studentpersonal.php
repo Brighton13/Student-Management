@@ -6,13 +6,13 @@ use CodeIgniter\Model;
 
 class Student extends Model
 {
-    protected $table = 'students';
-    protected $primaryKey = 'userID';
+    protected $table = 'student_personal_information';
+    protected $primaryKey = 'Id';
     protected $useAutoIncrement = true;
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Name', 'identity', 'Age', 'grade_id', 'Address', 'Phone', 'Email', 'Password', 'ConfirmPassword', 'DateEnrolled', 'Role' => 'Student'];
+    protected $allowedFields = ['StudentId', 'FirstName', 'LastName',  'Age', 'Gender', 'Nationality','Address','DateOfBirth'];
 
     // Dates
     protected $useTimestamps = false;

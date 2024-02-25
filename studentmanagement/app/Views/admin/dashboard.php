@@ -55,7 +55,7 @@
                                   <a class="nav-link" id="hello" href="<?= site_url('Admin/hire') ?>"  data-page="<?= site_url('Admin/hire') ?>">   <i class="fas fa-cog"></i> Add Teacher</a>
                               </li>
                               <li class="nav-item">
-                                  <a class="nav-link" id="hello" href="#"  data-page="">   <i class="fas fa-envelope"></i> View Teachers</a>
+                                  <a class="nav-link" id="hello" href="<?= site_url('Admin/Teachers') ?>"  data-page="<?= site_url('Admin/Teachers') ?>">   <i class="fas fa-envelope"></i> View Teachers</a>
                               </li>
                             </li>
                               

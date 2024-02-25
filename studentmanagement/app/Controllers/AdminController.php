@@ -28,7 +28,15 @@ class AdminController extends BaseController
 
     }
 
+    public function GetAllTeachers(){
 
+        $teacher = new TeacherPersonal;
+        $data = [
+            "teachers" => $teacher->findall() ?? []
+        ];
+
+        return view('admin/Teachers',$data);
+    }
     public function AllStudents(){
         return view('admin/students');
     }
