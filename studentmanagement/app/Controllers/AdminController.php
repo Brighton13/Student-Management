@@ -199,11 +199,19 @@ class AdminController extends BaseController
             'Email' => "required",
             'HomeAddress' => "required",
             'PhoneOne' => 'required|max_length[15]',
-            'PhoneTwo' => 'max_length[15]',
-           // 'Document1' => 'uploaded[Document1]|max_size[file,1024]|ext_in[file,pdf,doc,docx]',
-           // 'Document2' => 'uploaded[Document2]|max_size[file,1024]|ext_in[file,pdf,doc,docx]'
-           
+            //'Document1' => 'uploaded[Document1]|max_size[file,1024]|ext_in[file,pdf,doc,docx]',
+                      
         ];
+       
+       /*check if optional fields have been provided add to validation rules
+        if (!empty($_FILES['Document2']['name'])) {
+            $rules['Document2'] = 'uploaded[Document2]|max_size[file,1024]|ext_in[file,pdf,doc,docx]';
+        }*/
+
+        // Check if PhoneTwo is provided, and if so, add validation rules for it
+        if (!empty($this->request->getPost('PhoneTwo'))) {
+            $rules['PhoneTwo'] = 'max_length[15]';
+        }
 
         if ($this->validate($rules)) {
             $identity = $this->request->getPost('Identity');
@@ -215,7 +223,6 @@ class AdminController extends BaseController
             $Email = $this->request->getPost('Email');
             $address = $this->request->getPost('HomeAddress');
             $PhoneOne = $this->request->getPost('PhoneOne');
-            $PhoneTwo = $this->request->getPost('PhoneTwo');
             $file1 = $this->request->getFile('Document1');
             $file2 = $this->request->getFile('Document2');
             $Password = Hash::encrypt('Zam@24');
@@ -233,7 +240,8 @@ class AdminController extends BaseController
                 $file1->move('TeacherQualifications',$fileName1);
                 
             } else {
-                return redirect()->to('Admin')->with('error', 'Error uploading Document1');
+                session()->setFlashdata('error', 'Error uploading Document1');
+                return redirect()->back()->withInput();
             }
 
             if (!empty($file2)) {
@@ -242,7 +250,8 @@ class AdminController extends BaseController
                 $file2->move('TeacherQualifications',$fileName2);
                 
             } else {
-                return redirect()->to('Admin')->with('error', 'Error uploading Document2');
+                session()->setFlashdata('error', 'Error uploading Document2');
+                return redirect()->back()->withInput();
             }
             // Insert data into the database
             $teacherPersonalInformation = new TeacherPersonal();
@@ -262,7 +271,7 @@ class AdminController extends BaseController
             $data2 = [
                 'TeacherId' => $identity,
                 'PhoneOne' => $PhoneOne,
-                'PhoneTwo' => $PhoneTwo,
+                'PhoneTwo' => $this->request->getPost('PhoneTwo'),
                 'Email' => $Email,
             ];
             $teacherContact->insert($data2);

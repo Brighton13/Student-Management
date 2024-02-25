@@ -66,11 +66,19 @@
     <div class="panel panel-default shadow">
         <div class="panel-body">
         <div class="row justify-content-center">
-        <div class="col-md-8 text-center">
-            <h4 class="form-heading">Teacher Creation Forms</h4>
+            <div class="col-md-8 text-center">
+                <h4 class="form-heading">Teacher Creation Forms</h4>
+            </div>
         </div>
-    </div>
-<form  method="post" action="<?= site_url('Admin/hire') ?>" class="container mt-5" enctype="multipart/form-data">
+
+        <?php if (!empty(session()->getFlashdata("error"))) { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo session()->getFlashdata("error"); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
+    
+<form  method="post" action="<?= site_url('Admin/hire') ?>" class="container mt-5" enctype="multipart/form-data"  onsubmit="return validateForm()">
     <?php csrf_field() ?>
     <nav>
         <div class="nav nav-tabs " id="nav-tab" role="tablist">
@@ -94,21 +102,21 @@
                 </div>
                 <div class="col-md-6">
                     <label for="DOB" class="form-label">Date Of Birth<span style="color: red;">*<span></label>
-                    <input type="date" class="form-control" name="DateOfBirth">
+                    <input type="date" class="form-control" name="DateOfBirth" onchange="calculateAge(this.value)">
                     <span class="text-danger text-sm">
                          <?= isset($validation) ? display_form_errors($validation, 'DateOfBirth') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="FirstName" placeholder="">
+                    <input type="text" class="form-control" name="FirstName" placeholder="" >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'firstName') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Last Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="LastName" placeholder="">
+                    <input type="text" class="form-control" name="LastName" placeholder="" >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'LastName') : "" ?>
                     </span>
@@ -127,7 +135,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="nationality" class="form-label">Nationality<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="Nationality" placeholder="">
+                    <input type="text" class="form-control" name="Nationality" placeholder="" >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'Nationality') : "" ?>
                     </span>
@@ -135,7 +143,7 @@
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Home Address<span style="color: red;">*<span></label>
-                <textarea name="HomeAddress" class="form-control" placeholder=""></textarea>
+                <textarea name="HomeAddress" class="form-control" placeholder="" ></textarea>
                 <span class="text-danger text-sm">
                     <?= isset($validation) ? display_form_errors($validation, 'HomeAddress') : "" ?>
                 </span>
@@ -145,20 +153,22 @@
         <div class="tab-pane fade " id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
 
                 <div class="col-md-6">
-                    <label for="PhoneOne" class="form-label">Phone Number:</label>
-                    <input type="text" class="form-control" name="PhoneOne" placeholder="09XXXXXX....">
+                    <label for="PhoneOne" class="form-label">Phone Number<span style="color: red;">*<span></label>
+                    <input type="text" class="form-control" name="PhoneOne" placeholder="09XXXXXX...." >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'PhoneOne') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
-                    <label for="PhoneTwo" class="form-label">Phone Number:</label>
-                    <input type="text" class="form-control" name="PhoneTwo" placeholder="09XXXXXX....">
-                  
+                    <label for="PhoneTwo" class="form-label">Phone Number(optional)</label>
+                    <input type="text" class="form-control" name="PhoneTwo" placeholder="09XXXXXX...." >
+                    <span class="text-danger text-sm">
+                        <?= isset($validation) ? display_form_errors($validation, 'PhoneTwo') : "" ?>
+                    </span>
                 </div>
                 <div class="col-md-6">
-                    <label for="Email" class="form-label">Email:</label>
-                    <input type="Email" class="form-control" name="Email" placeholder="Email">
+                    <label for="Email" class="form-label">Email<span style="color: red;">*<span></label>
+                    <input type="Email" class="form-control" name="Email" placeholder="Email" >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'Email') : "" ?>
                     </span>
@@ -168,18 +178,18 @@
         <div class="tab-pane fade " id="nav-qualification" role="tabpanel" aria-labelledby="nav-qualification-tab" tabindex="0">
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="Document1" class="form-label">Qualifications Doc 1</label>
-                    <input type="file" class="form-control" name="Document1" >
+                    <label for="Document1" class="form-label">Qualifications Doc 1<span style="color: red;">*<span></label>
+                    <input type="file" class="form-control" name="Document1"  >
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'Document1') : "" ?>
                     </span>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="Document2" class="form-label">Qualifications Doc 2</label>
-                    <input type="file" class="form-control" name="Document2">
+                    <label for="Document2" class="form-label">NRC<span style="color: red;">*<span></label>
+                    <input type="file" class="form-control" name="Document2" >
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'Document2') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Document') : "" ?>
                     </span>
                 </div>
                
@@ -191,3 +201,4 @@
 </div>
 </div>
 <br>
+

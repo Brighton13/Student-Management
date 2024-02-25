@@ -205,7 +205,43 @@
     
    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
-    <script>
+   
+   <script>
+    
+    function fadeOutAlert() {
+        // Get the alert element
+        const alertElement = document.querySelector('.alert');
+
+        // Check if the alert element exists
+        if (alertElement) {
+            // Set the initial opacity
+            let opacity = 1;
+
+            // Define the interval function to decrease opacity
+            const intervalId = setInterval(() => {
+                // Reduce opacity
+                opacity -= 0.05;
+
+                // Apply the new opacity to the alert element
+                alertElement.style.opacity = opacity;
+
+                // Check if opacity is zero or less
+                if (opacity <= 0) {
+                    // Clear the interval
+                    clearInterval(intervalId);
+
+                    // Remove the alert element from the DOM
+                    alertElement.remove();
+                }
+            }, 100); // Interval duration (milliseconds)
+        }
+    }
+
+    // Call the fadeOutAlert function after a delay (e.g., 5 seconds)
+    setTimeout(fadeOutAlert, 5000); // 5000 milliseconds = 5 seconds
+
+
+
         document.addEventListener("DOMContentLoaded", function() {
             // Get reference to the main body
             const mainBody = document.getElementById("mainBody");
@@ -229,6 +265,73 @@
                 });
             });
         });
+
+        function validateForm() {
+        // Get the input fields
+        const identity = document.getElementsByName('Identity')[0].value;
+        const dateOfBirth = document.getElementsByName('DateOfBirth')[0].value;
+        const firstName = document.getElementsByName('FirstName')[0].value;
+        const lastName = document.getElementsByName('LastName')[0].value;
+        const nationality = document.getElementsByName('Nationality')[0].value;
+        const gender = document.getElementsByName('Gender')[0].value;
+        const homeAddress = document.getElementsByName('HomeAddress')[0].value;
+        const phoneOne = document.getElementsByName('PhoneOne')[0].value;
+        const email = document.getElementsByName('Email')[0].value;
+        const document1 = document.getElementsByName('Document1')[0].value;
+        const document2 = document.getElementsByName('Document2')[0].value;
+
+        // Check if mandatory fields are empty
+        if (!identity || !dateOfBirth || !firstName || !lastName || !nationality || !gender || !homeAddress || !phoneOne || !email || !document1 || !document2) {
+            // Display alert for missing mandatory fields
+            const alert = document.createElement('div');
+            alert.classList.add('alert', 'alert-danger', 'position-absolute', 'top-0', 'end-0', 'm-3');
+            alert.textContent = 'Please fill in all mandatory fields.';
+            document.body.appendChild(alert);
+
+            // Remove the alert after 5 seconds
+            setTimeout(() => {
+                alert.remove();
+            }, 5000);
+
+            // Prevent form submission
+            return false;
+        }
+
+        // If all mandatory fields are filled, allow form submission
+        return true;
+    }
+
+    function calculateAge(dateString) {
+        const today = new Date();
+        const birthDate = new Date(dateString);
+        const age = today.getFullYear() - birthDate.getFullYear();
+        const m = today.getMonth() - birthDate.getMonth();
+
+        // Check if age is less than 15
+        if (age < 15 || (age === 15 && m < 0)) {
+            const alertDiv = document.createElement('div');
+            alertDiv.classList.add('alert', 'alert-danger', 'alert-dismissible', 'fade', 'show');
+            alertDiv.setAttribute('role', 'alert');
+            alertDiv.innerHTML = `
+                Date of birth is too recent. Age cannot be less than 15.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            `;
+            const container = document.querySelector('.position-absolute.top-0.end-0');
+            container.appendChild(alertDiv);
+
+            // Fade out the alert after 5 seconds
+            setTimeout(() => {
+                alertDiv.classList.remove('show');
+                setTimeout(() => {
+                    alertDiv.remove();
+                }, 500);
+            }, 5000);
+
+            // Reset the DateOfBirth input field
+            document.querySelector('input[name="DateOfBirth"]').value = "";
+        }
+    }
+
     </script> 
     
 
