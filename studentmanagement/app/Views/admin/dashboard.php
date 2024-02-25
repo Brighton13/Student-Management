@@ -21,6 +21,10 @@
         .offcanvas-open .container-fluid {
             transform: translateX(250px);
         }
+        .alert {
+    transition: opacity 3s ease-out;
+}
+
 
        
 </style>
@@ -67,7 +71,7 @@
                                   <a class="nav-link" id="hello" href="<?= site_url('Admin/enroll') ?>"  data-page="<?= site_url('Admin/enroll')?>"><i class="fas fa-cog"></i> Enroll</a>
                               </li>
                               <li class="nav-item">
-                                  <a class="nav-link"  id="hello" href="<?= site_url('Admin/AllStudents') ?>"  data-page=""><i class="fas fa-envelope"></i> View Students</a>
+                                  <a class="nav-link"  id="hello" href="<?= site_url('Admin/AllStudents') ?>"  data-page="<?= site_url('Admin/AllStudents') ?>"><i class="fas fa-envelope"></i> View Students</a>
                               </li>
                              
                           </ul>
@@ -173,27 +177,23 @@
             </div>
         </div>-->
         <div class="content">
-            <?php
-            if (!empty(session()->getFlashdata("success"))) {
-                ?>
-                <div class="alert alert-success">
-                    <?php
-                    echo session()->getFlashdata("success")
-                        ?>
-                </div>
-                <?php
-            } else if (!empty(session()->getFlashdata("error"))) {
-                ?>
-                    <div class="alert alert-danger">
-                        <?php
-                        echo session()->getFlashdata("error")
-                            ?>
-                    </div>
+    <div class="position-absolute top-0 end-0 mt-5 me-5">
+        <?php if (!empty(session()->getFlashdata("success"))) { ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <?php echo session()->getFlashdata("success"); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } else if (!empty(session()->getFlashdata("error"))) { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <?php echo session()->getFlashdata("error"); ?>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
+    </div>
 
-                <?php
-            }
 
-            ?>
+
+
       <div id="mainBody" class="container mt-5">
         
     </div> 

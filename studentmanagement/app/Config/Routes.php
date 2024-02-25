@@ -20,6 +20,7 @@ $routes->group('User', ['filter' => 'Auth'], function ($routes) {
 $routes->group('Admin', ['filter' => 'Auth'], function ($routes) {
     $routes->get('/', 'AdminController::index');
     $routes->match(['get', 'post'], 'hire', 'AdminController::HireTeacher');
+    $routes->match(['get', 'post'], 'AllStudents', 'AdminController::AllStudents');
     $routes->match(['get', 'post'], 'enroll', 'AdminController::EnrollStudent');
     $routes->get('announcement/(:segment)', 'AdminController::ViewAnnouncement/$1');
     $routes->match(['get', 'post'], 'announcement', 'AdminController::Announcement');

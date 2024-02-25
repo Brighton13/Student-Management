@@ -37,7 +37,7 @@
 
         <div class="card" style="width: 18rem;">
             <!-- Logo -->
-            <img src="<?= base_url('images/logo.png') ?>" style="width: 6rem; height:7rem"
+            <img src="<?= base_url('images/logo hks.jpg') ?>" style="width: 6rem; height:7rem"
                 class="card-img-top rounded-circle mx-auto mt-3" alt="Logo">
 
             <div class="card-body">
@@ -59,7 +59,7 @@
                         </span>
                     </div>
 
-                    <button type="submit" class="btn btn-success w-100">Login</button>
+                    <button type="submit" class="btn btn-primary w-100">Login</button>
 
                     <p class="mt-2"><a href="#">Forgotten your password?</a></p>
                 </form>

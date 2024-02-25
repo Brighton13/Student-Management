@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Teacher extends Model
+class TeacherPersonal extends Model
 {
     protected $table = 'teacher_personal_Information';
     protected $primaryKey = 'Id';

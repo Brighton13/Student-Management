@@ -12,7 +12,7 @@ class Logindetails extends Model
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['identity', 'password', 'Role'];
+    protected $allowedFields = ['Identity', 'Password', 'Role','IsLoggedIn'];
 
     // Dates
     protected $useTimestamps = false;

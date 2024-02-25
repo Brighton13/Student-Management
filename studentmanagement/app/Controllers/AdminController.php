@@ -9,6 +9,8 @@ use App\Models\Grade;
 use App\Models\Logindetails;
 use App\Models\Subject;
 use App\Models\TeacherPersonal;
+use App\Models\TeacherContact;
+use App\Models\TeacherQualification;
 use App\Models\TeacherGrade;
 
 class AdminController extends BaseController
@@ -24,6 +26,11 @@ class AdminController extends BaseController
             exit();
         }
 
+    }
+
+
+    public function AllStudents(){
+        return view('admin/students');
     }
 
   /*  public function Announcement()
@@ -85,23 +92,21 @@ class AdminController extends BaseController
         return $employeeid;
     }
     
-/*
+
  public function EnrollStudent()
- {
+ {     
+     $validation = \Config\Services::validation();
 
      if ($this->request->is("get")) {
 
-         $grade = new Grade();
-
-         $grades = $grade->findAll();
-
+       
          $data = [
              'identity' => $this->StudentIDgenerator(),
-             'Grades' => $grades
+             'validation' => $validation,
          ];
 
          return view("admin/enroll", $data);
-     }
+     }else{
 
      $validation = \Config\Services::validation();
 
@@ -163,7 +168,8 @@ class AdminController extends BaseController
          return view('admin/enroll', ['validation' => $validation]);
      }
 
- } 
+    }
+ }
 
  
  protected function StudentIDgenerator()
@@ -176,76 +182,263 @@ class AdminController extends BaseController
      return $studentid;
 
  }
-*/
-
 
  public function HireTeacher()
- {
-     $validation = \Config\Services::validation();
- 
-     if ($this->request->is('post')) {
- 
-         $rules = [
-             'Identity' => 'is_unique[teacher_personal_information.identity, logindetails.Identity]',
-             'DateOfBirth' => "required",
-             'FirstName' => "required",
-             'LastName' => "required",
-             'Nationality' => "required",
-             'Age' => "required",
-             'Gender' => "required",
-             'Email' => "required",
-             'HomeAddress' => "required",
-             'PhoneOne' => 'required|max_length[15]',
-             'PhoneTwo' => 'max_length[15]',
-             'Document1' => 'required',
-             
-         ];
- 
-         if ($this->validate($rules)) { // Corrected to `$this->validate` from `$this->Validate`
-             $identity = $this->request->getPost('Identity');
-             $DOB = $this->request->getPost('DateOfBirth');
-             $firstName = $this->request->getPost('FirstName');
-             $lastName = $this->request->getPost('LastName');
-             $nationality = $this->request->getPost('Nationality');
-             $age = $this->request->getPost('Age');
-             $gender = $this->request->getPost('Gender');
-             $Email = $this->request->getPost('Email');
-             $address = $this->request->getPost('HomeAddress');
-             $PhoneOne = $this->request->getPost('PhoneOne');
-             $PhoneTwo = $this->request->getPost('PhoneTwo');
-             $Document1 = $this->request->getPost('Document1');
-             $Document2 = $this->request->getPost('Document2');
-             $Password = 'Zam@24';
-             $Role = 'User';
+{
+    $validation = \Config\Services::validation();
 
-             $db = db_connect();
-             $sp1 = 'CALL sp_AddTeacher_Personal_Information(?,?,?,?,?,?,?,?)';
-             $sp2 ='CALL sp_AddLoginDetails(?,?,?)';
+    if ($this->request->is('post')) {
+
+        $rules = [
+            'Identity' => 'is_unique[teacher_personal_information.identity, logindetails.Identity]',
+            'DateOfBirth' => "required",
+            'FirstName' => "required",
+            'LastName' => "required",
+            'Nationality' => "required",
+            'Gender' => "required",
+            'Email' => "required",
+            'HomeAddress' => "required",
+            'PhoneOne' => 'required|max_length[15]',
+            'PhoneTwo' => 'max_length[15]',
+           // 'Document1' => 'uploaded[Document1]|max_size[file,1024]|ext_in[file,pdf,doc,docx]',
+           // 'Document2' => 'uploaded[Document2]|max_size[file,1024]|ext_in[file,pdf,doc,docx]'
+           
+        ];
+
+        if ($this->validate($rules)) {
+            $identity = $this->request->getPost('Identity');
+            $DOB = $this->request->getPost('DateOfBirth');
+            $firstName = $this->request->getPost('FirstName');
+            $lastName = $this->request->getPost('LastName');
+            $nationality = $this->request->getPost('Nationality');
+            $gender = $this->request->getPost('Gender');
+            $Email = $this->request->getPost('Email');
+            $address = $this->request->getPost('HomeAddress');
+            $PhoneOne = $this->request->getPost('PhoneOne');
+            $PhoneTwo = $this->request->getPost('PhoneTwo');
+            $file1 = $this->request->getFile('Document1');
+            $file2 = $this->request->getFile('Document2');
+            $Password = Hash::encrypt('Zam@24');
+            $Role = 'User';
+            $age = date('Y') - date('Y', strtotime($DOB));
+
+            
+            // Upload files
+            $fileName1 = '';
+            $fileName2 = '';
+
+            if (!empty($file1)) {
+                $fileName1 = $file1->getName();
+
+                $file1->move('TeacherQualifications',$fileName1);
+                
+            } else {
+                return redirect()->to('Admin')->with('error', 'Error uploading Document1');
+            }
+
+            if (!empty($file2)) {
+                $fileName2 = $file2->getName();
+
+                $file2->move('TeacherQualifications',$fileName2);
+                
+            } else {
+                return redirect()->to('Admin')->with('error', 'Error uploading Document2');
+            }
+            // Insert data into the database
+            $teacherPersonalInformation = new TeacherPersonal();
+            $data1 = [
+                'Identity' => $identity,
+                'DateOfBirth' => $DOB,
+                'FirstName' => $firstName,
+                'LastName' => $lastName,
+                'Nationality' => $nationality,
+                'Gender' => $gender,
+                'Age' => $age,
+                'HomeAddress' => $address,
+            ];
+            $teacherPersonalInformation->insert($data1);
+
+            $teacherContact = new TeacherContact();
+            $data2 = [
+                'TeacherId' => $identity,
+                'PhoneOne' => $PhoneOne,
+                'PhoneTwo' => $PhoneTwo,
+                'Email' => $Email,
+            ];
+            $teacherContact->insert($data2);
+
+            $teacherQualification = new TeacherQualification();
+            $data3 = [
+                'TeacherId' => $identity,
+                'QualificationDocument1' => $fileName1,
+                'QualificationDocument2' => $fileName2
+            ];
+            $teacherQualification->insert($data3);
+
+            $logindata = new Logindetails();
+            $logindatum = [
+                'Identity' => $identity,
+                'Password' => $Password,
+                'Role' => $Role,
+                'IsloggedIn' => 'false',
+            ];
+            $logindata->insert($logindatum);
+
+            return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');
+        } else {
+            return redirect()->to('Admin')->with('error', 'Teacher was not registered successfully');
+        }
+    }
+
+    $data = [
+        'validation' => $validation,
+        'identity' => $this->EmployeeIDGenerator(),
+    ];
+
+    return view('admin/hire', $data);
+}
+
+
+
+
+//  public function HireTeacher()
+//  {
+//      $validation = \Config\Services::validation();
+ 
+//      if ($this->request->is('post')) {
+ 
+//          $rules = [
+//              'Identity' => 'is_unique[teacher_personal_information.identity, logindetails.Identity]',
+//              'DateOfBirth' => "required",
+//              'FirstName' => "required",
+//              'LastName' => "required",
+//              'Nationality' => "required",
+//              'Gender' => "required",
+//              'Email' => "required",
+//              'HomeAddress' => "required",
+//              'PhoneOne' => 'required|max_length[15]',
+//              'PhoneTwo' => 'max_length[15]',
+//              'Document1' => 'required',
+             
+//          ];
+ 
+//          if ($this->validate($rules)) { // Corrected to `$this->validate` from `$this->Validate`
+
+//              $identity = $this->request->getPost('Identity');
+//              $DOB = $this->request->getPost('DateOfBirth');
+//              $firstName = $this->request->getPost('FirstName');
+//              $lastName = $this->request->getPost('LastName');
+//              $nationality = $this->request->getPost('Nationality');
+//              $gender = $this->request->getPost('Gender');
+//              $Email = $this->request->getPost('Email');
+//              $address = $this->request->getPost('HomeAddress');
+//              $PhoneOne = $this->request->getPost('PhoneOne');
+//              $PhoneTwo = $this->request->getPost('PhoneTwo');
+//              $file1 = $this->request->getFile('Document1');
+//              $file2= $this->request->getFile('Document2'); 
+//              $Password = Hash::encrypt('Zam@24');
+//              $Role = 'User';
+//              $age = date('Y') - date('Y', strtotime($DOB));
+
+
+
+//              if ($file1 !== null && $file1->isValid() && !$file1->hasMoved()) {
+//                 $file1->move('./TeacherQualifications');
+//                 $fileName1 = $file1->getName();
+//             } else {
+//                 // Handle error, log it, or return a response indicating the issue
+//                 echo "Error uploading Document1";
+//             }
+            
+//             if ($file2 !== null && $file2->isValid() && !$file2->hasMoved()) {
+//                 $file2->move('./TeacherQualifications');
+//                 $fileName2 = $file2->getName();
+//             } else {
+//                 // Handle error, log it, or return a response indicating the issue
+//                 echo "Error uploading Document2";
+//             }
+              
+
+//             $teacherPersonalInfromation=new TeacherPersonal();
+//             $data1=[
+//              'Identity' => $identity,
+//              'DateOfBirth' => $DOB,
+//              'FirstName' => $firstName,
+//              'LastName' => $lastName,
+//              'Nationality' => $nationality,
+//              'Gender' => $gender,
+//              'Age' => $age,
+//              'HomeAddress' => $address   
+//             ];
+//             $teacherPersonalInfromation->insert($data1);
+
+
+
+//             $teacherContact=new TeacherContact();
+//             $data2=[
+//                 'TeacherId'=> $identity,
+//                 'PhoneOne' => $PhoneOne,
+//                 'PhoneTwo' => $PhoneTwo,
+//                 'Email'=>$Email
+
+//             ];
+//             $teacherContact -> insert($data2);
+
+//             $teacherQualification = new TeacherQualification();
+//             $data3 =[
+//                 'TeacherId' =>$identity,
+//                 'QualificationDocument1'=>$file1,
+//                 'QualificationDocument2' => $file2
+
+//             ];
+//             $teacherQualification-> insert($data3);
+
+//             $logindata= new Logindetails();
+//             $logindatum=[
+//                 'Identity' =>$identity,
+//                 'Password' =>$Password,
+//                 'Role' =>$Role,
+//                 'IsloggedIn'=> 'false'
+//             ];
+//             $logindata->insert($logindatum);
+
+
+
+//             //  $db = db_connect();
+//             //  $sp1 ='CALL sp_AddTeacher_Information(?,?,?,?,?,?,?)';
+//             //  $sp2 ='CALL sp_AddLoginDetails(?,?,?)';
+//             //  $sp3 ='CALL sp_AddTeacherContact_Information(?,?,?,?)';
+//             //  $sp4 ='CALL sp_TeacherQualificationInformation(?,?,?)';
             
              
-             //insert Teacher personal information
-             $db->query($sp1, array($identity,$firstName,$lastName,$age,$gender, $nationality,$address,$DOB));
-             //login details
-             $db->query($sp2, array($identity,$Password,$Role));
+//             //  //insert Teacher personal information
+//             //  $db->query($sp1, array($identity,$firstName,$lastName,$gender, $nationality,$address,$DOB));
+
+//             //  //login details
+//             //  $db->query($sp2, array($identity,$Password,$Role));
+
+//             //  //Insert Teacher contact information
+//             //  $db->query($sp3, array($PhoneOne,$PhoneTwo,$Email,$identity));
  
-             // Insert additional data into other tables as needed
-             // You can call other stored procedures or use regular insert queries here
+//             //  $db->query($sp4, array($identity,$fileName1, $fileName2));
       
  
  
-           //  return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');
-         } else {
-             return redirect()->to('Admin')->with('error', 'Teacher was not registered successfully');
-         }
-     }
+//              return redirect()->to('Admin')->with('success', 'Teacher was registered successfully');
+//          } else {
+//              return redirect()->to('Admin')->with('error', 'Teacher was not registered successfully');
+//          }
+//      }
  
-     $data1 = [
-         'validation' => $validation,
-         'identity' => $this->EmployeeIDGenerator(),
-     ];
+//      $data1 = [
+//          'validation' => $validation,
+//          'identity' => $this->EmployeeIDGenerator(),
+//      ];
  
-     return view('admin/hire', $data1);
- }
+//      return view('admin/hire', $data1);
+//  }
+
+
  
 /*
     public function ViewAnnouncement($id)

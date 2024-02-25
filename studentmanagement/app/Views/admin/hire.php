@@ -1,21 +1,76 @@
+
 <style>
-     #submitBtn {
-            margin: 20px; /* Add margin to the submit button */
-        }
+    <style>
+    /* Additional styling */
+    #submitBtn {
+        margin: 20px; /* Add margin to the submit button */
+        background-color: orange; /* Orange background color */
+        color: white; /* White text color */
+        border: none; /* Remove button border */
+        padding: 10px 20px; /* Add padding */
+        border-radius: 5px; /* Add border radius */
+    }
 
-        .container {
-            margin-top: 20px; /* Add margin to the container */
-            margin-bottom: 20px; /* Add margin to the container */
-        }
+    #submitBtn:hover {
+        background-color: green; /* Green background color on hover */
+    }
 
+    .container {
+        margin-top: 20px; /* Add margin to the container */
+        margin-bottom: 20px; /* Add margin to the container */
+    }
+
+    /* Apply some styling to form inputs */
+    input[type="text"],
+    input[type="number"],
+    select,
+    textarea {
+        border: 1px solid #ced4da; /* Add a border */
+        border-radius: 4px; /* Add border radius */
+        padding: 8px; /* Add padding */
+        margin-bottom: 10px; /* Add margin bottom */
+    }
+    .nav-tabs .nav-link {
+        color: #ffffff; /* White text color */
+        background-color: orange; /* Orange background color */
+        border: none; /* Remove border */
+        border-radius: 0; /* Remove border radius */
+    }
+
+    .nav-tabs .nav-link.active {
+        color: #ffffff; /* White text color for active tab */
+        background-color: green; /* Green background color for active tab */
+    }
+
+    /* Tab pane styling */
+    .tab-pane {
+        background-color: #ffffff; /* White background color */
+        border: 1px solid green; /* Green border */
+        padding: 20px; /* Add padding */
+        height: 400px; 
+        border-radius: 5px; /* Add border radius */
+    }
+    .form-heading {
+        color: green; /* Green text color */
+        font-size: 24px; /* Larger font size */
+        font-weight: bold; /* Bold font weight */
+        margin-bottom: 20px; /* Add some bottom margin */
+        text-align: center; /* Center align the text */
+        text-transform: uppercase; /* Convert text to uppercase */
+    }
 </style>
+
 
 
 <div class="container mt-5">
     <div class="panel panel-default shadow">
         <div class="panel-body">
-            <h4 style="margin:12px;">Teacher Creation Forms</h4>
-<form  method="post" action="<?= site_url('Admin/hire') ?>" class="container mt-5">
+        <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <h4 class="form-heading">Teacher Creation Forms</h4>
+        </div>
+    </div>
+<form  method="post" action="<?= site_url('Admin/hire') ?>" class="container mt-5" enctype="multipart/form-data">
     <?php csrf_field() ?>
     <nav>
         <div class="nav nav-tabs " id="nav-tab" role="tablist">
@@ -46,26 +101,19 @@
                 </div>
                 <div class="col-md-6">
                     <label for="firstName" class="form-label">First Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="FirstName" placeholder="First Name">
+                    <input type="text" class="form-control" name="FirstName" placeholder="">
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'firstName') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="lastName" class="form-label">Last Name<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="LastName" placeholder="Last Name">
+                    <input type="text" class="form-control" name="LastName" placeholder="">
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'LastName') : "" ?>
                     </span>
                 </div>
                 
-                <div class="col-md-6">
-                    <label for="age" class="form-label">Age<span style="color: red;">*<span></label>
-                    <input type="number" class="form-control" name="Age">
-                    <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'Age') : "" ?>
-                    </span>
-                </div>
                 <div class="col-md-6">
                     <label for="gender" class="form-label">Gender<span style="color: red;">*<span></label>
                     <select name="Gender" class="form-select">
@@ -79,7 +127,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="nationality" class="form-label">Nationality<span style="color: red;">*<span></label>
-                    <input type="text" class="form-control" name="Nationality" placeholder="Nationality">
+                    <input type="text" class="form-control" name="Nationality" placeholder="">
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'Nationality') : "" ?>
                     </span>
@@ -87,7 +135,7 @@
             </div>
             <div class="mb-3">
                 <label for="address" class="form-label">Home Address<span style="color: red;">*<span></label>
-                <textarea name="HomeAddress" class="form-control" placeholder="Enter Home Address"></textarea>
+                <textarea name="HomeAddress" class="form-control" placeholder=""></textarea>
                 <span class="text-danger text-sm">
                     <?= isset($validation) ? display_form_errors($validation, 'HomeAddress') : "" ?>
                 </span>

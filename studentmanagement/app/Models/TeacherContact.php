@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Teacher extends Model
+class TeacherContact extends Model
 {
     protected $table = 'teacher_contact_Information';
-    protected $primaryKey = 'ID';
+    protected $primaryKey = 'Id';
     protected $useAutoIncrement = true;
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Name', 'identity', 'Age', 'Address', 'Phone', 'Email', 'Password', 'ConfirmPassword', 'DateHired', 'Role', 'Gender'];
+    protected $allowedFields = ['TeacherId', 'PhoneOne','PhoneTwo','Email'];
 
     // Dates
     protected $useTimestamps = false;
