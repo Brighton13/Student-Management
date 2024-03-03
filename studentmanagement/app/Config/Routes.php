@@ -19,6 +19,7 @@ $routes->group('User', ['filter' => 'Auth'], function ($routes) {
 
 $routes->group('Admin', ['filter' => 'Auth'], function ($routes) {
     $routes->get('/', 'AdminController::index');
+    $routes->post('GetGradeTeacher', 'AdminController::GetGradeTeacher');
     $routes->match(['get', 'post'], 'hire', 'AdminController::HireTeacher');
     $routes->get('Teachers', 'AdminController::GetAllTeachers');
     $routes->match(['get', 'post'], 'AllStudents', 'AdminController::AllStudents');
@@ -29,8 +30,8 @@ $routes->group('Admin', ['filter' => 'Auth'], function ($routes) {
     $routes->get('classes', 'AdminController::allocation');
     $routes->get('subjects', 'AdminController::Subjects');
     $routes->match(['get', 'post'], 'create', 'AdminController::AddSubject');
-
 });
+
 
 $routes->group('Student', ['filter' => 'Auth'], function ($routes) {
     $routes->get('/', 'StudentController::index');

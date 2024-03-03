@@ -140,14 +140,30 @@
                         <?= isset($validation) ? display_form_errors($validation, 'Nationality') : "" ?>
                     </span>
                 </div>
-            </div>
-            <div class="mb-3">
+                
+                <div class="col-md-6">
                 <label for="address" class="form-label">Home Address<span style="color: red;">*<span></label>
                 <textarea name="HomeAddress" class="form-control" placeholder="" ></textarea>
                 <span class="text-danger text-sm">
                     <?= isset($validation) ? display_form_errors($validation, 'HomeAddress') : "" ?>
                 </span>
-            </div>
+               </div>
+
+               <div class="col-md-6">
+    <label for="grade" class="form-label">Grade</label>
+    <select name="grade" class="form-select">
+        <option selected disabled>Select Grade</option>
+        <?php foreach ($Grades as $grade): ?>
+            <option value="<?= $grade->GradeID?>"> <?= $grade->GradeName ?> </option>
+        <?php endforeach; ?>
+    </select>
+    <span class="text-danger text-sm">
+        <?= isset($validation) ? display_form_errors($validation, 'grade') : "" ?>
+    </span>
+</div>
+           
+            </div>    
+           
         </div>
         <!-- Tab 2 -->
         <div class="tab-pane fade " id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">

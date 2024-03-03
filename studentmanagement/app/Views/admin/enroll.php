@@ -73,7 +73,7 @@
             <h4 class="form-heading">Student Enrollment Forms</h4>
         </div>
     </div>
-<form id="mainForm" method="post" action="<?= site_url('Admin/hire') ?>" class="container mt-5">
+<form id="mainForm" method="post" action="<?= site_url('Admin/enroll') ?>" class="container mt-5">
     <?php csrf_field() ?>
     <nav>
         <div class="nav nav-tabs " id="nav-tab" role="tablist">
@@ -90,50 +90,44 @@
 
             <div class="row mb-3">
                 <div class="col-md-6">
-                    <label for="identity" class="form-label">Identity:</label>
-                    <input type="text" class="form-control" name="identity" value="<?= set_value('identity', $identity) ?>">
+                    <label for="Identity" class="form-label">Identity:</label>
+                    <input type="text" class="form-control" name="Identity" value="<?= set_value('Identity', $identity) ?>">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'identity') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Identity') : "" ?>
                     </span>
                 </div>
 
                 <div class="col-md-6">
-                    <label for="firstName" class="form-label">First Name:</label>
-                    <input type="text" class="form-control" name="firstName" placeholder="">
+                    <label for="FirstName" class="form-label">First Name:</label>
+                    <input type="text" class="form-control" name="FirstName" placeholder="">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'firstName') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'FirstName') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
-                    <label for="lastName" class="form-label">Last Name:</label>
-                    <input type="text" class="form-control" name="lastName" placeholder="">
+                    <label for="LastName" class="form-label">Last Name:</label>
+                    <input type="text" class="form-control" name="LastName" placeholder="">
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'lastName') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'LastName') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
                     <label for="DOB" class="form-label">Date Of Birth:</label>
-                    <input type="date" class="form-control" name="">
+                    <input type="date" class="form-control" name="DOB">
                     <span class="text-danger text-sm">
                         <?= isset($validation) ? display_form_errors($validation, 'DOB') : "" ?>
                     </span>
                 </div>
+               
                 <div class="col-md-6">
-                    <label for="age" class="form-label">Age:</label>
-                    <input type="number" class="form-control" name="age">
-                    <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'age') : "" ?>
-                    </span>
-                </div>
-                <div class="col-md-6">
-                    <label for="gender" class="form-label">Gender:</label>
-                    <select name="gender" class="form-select">
+                    <label for="Gender" class="form-label">Gender:</label>
+                    <select name="Gender" class="form-select">
                         <option selected disabled>Select Gender</option>
                         <option value="male">Male</option>
                         <option value="female">Female</option>
                     </select>
                     <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'gender') : "" ?>
+                        <?= isset($validation) ? display_form_errors($validation, 'Gender') : "" ?>
                     </span>
                 </div>
                 <div class="col-md-6">
@@ -144,10 +138,10 @@
                     </span>
                 </div>
                 <div class="col-md-6">
-                <label for="address" class="form-label">Home Address:</label>
-                <textarea name="address" class="form-control" placeholder=""></textarea>
+                <label for="Address" class="form-label">Home Address:</label>
+                <textarea name="Address" class="form-control" placeholder=""></textarea>
                 <span class="text-danger text-sm">
-                    <?= isset($validation) ? display_form_errors($validation, 'address') : "" ?>
+                    <?= isset($validation) ? display_form_errors($validation, 'Address') : "" ?>
                 </span>
             </div>
             </div>
@@ -158,19 +152,34 @@
      <div class="tab-pane fade" id="nav-contact" role="tabpanel" aria-labelledby="nav-contact-tab" tabindex="0">
 <div class="row">
         <div class="col-md-3">
-            <label for="PhoneOne" class="form-label">Gardian Phone Number</label>
-            <input type="text" class="form-control" name="PhoneOne" placeholder="">
+            <label for="p_FirstName" class="form-label">Gardian's firstname<span style="color: red;">*<span></label>
+            <input type="text" class="form-control" name="p_FirstName" placeholder="">
             <span class="text-danger text-sm">
-                <?= isset($validation) ? display_form_errors($validation, 'PhoneOne') : "" ?>
+                <?= isset($validation) ? display_form_errors($validation, 'p_FirstName') : "" ?>
             </span>
         </div>
         <div class="col-md-3">
-            <label for="PhoneTwo" class="form-label">Gardian Phone Number</label>
-            <input type="text" class="form-control" name="PhoneTwo" placeholder="">
+            <label for="p_LastName" class="form-label">Gardian's lastname<span style="color: red;">*<span></label>
+            <input type="text" class="form-control" name="p_LastName" placeholder="">
             <span class="text-danger text-sm">
-                <?= isset($validation) ? display_form_errors($validation, 'PhoneTwo') : "" ?>
+                <?= isset($validation) ? display_form_errors($validation, 'p_LastName') : "" ?>
             </span>
         </div>
+        <div class="col-md-3">
+            <label for="Relationship" class="form-label">Relation to student<span style="color: red;">*<span></label>
+            <input type="text" class="form-control" name="Relationship" placeholder="">
+            <span class="text-danger text-sm">
+                <?= isset($validation) ? display_form_errors($validation, 'Relationship') : "" ?>
+            </span>
+        </div>
+        <div class="col-md-3">
+            <label for="PhoneNumber" class="form-label">Gardian's Phone Number<span style="color: red;">*<span></label>
+            <input type="text" class="form-control" name="PhoneNumber" placeholder="">
+            <span class="text-danger text-sm">
+                <?= isset($validation) ? display_form_errors($validation, 'PhoneNumber') : "" ?>
+            </span>
+        </div>
+
         <div class="col-md-6">
             <label for="Email" class="form-label">Gardian's Email</label>
             <input type="text" class="form-control" name="Email" placeholder="">
@@ -194,9 +203,7 @@
         <div class="col-md-6">
             <label for="Condition2" class="form-label">Condition 2</label>
             <input type="text" class="form-control" name="Condition2" placeholder="">
-            <span class="text-danger text-sm">
-                <?= isset($validation) ? display_form_errors($validation, 'Condition2') : "" ?>
-            </span>
+           
         </div>
         <div class="col-md-6">
             <label for="Condition1" class="form-label">Condition 3</label>
@@ -206,9 +213,7 @@
         <div class="col-md-6">
             <label for="Condition4" class="form-label">Condition 4</label>
             <input type="text" class="form-control" name="Condition4" placeholder="">
-            <span class="text-danger text-sm">
-                <?= isset($validation) ? display_form_errors($validation, 'Condition2') : "" ?>
-            </span>
+           
         </div> 
         
         <div class="col-md-6">
@@ -228,66 +233,37 @@
 
 <div class="tab-pane fade" id="nav-enroll" role="tabpanel" aria-labelledby="nav-enrollmentdetails-tab" tabindex="0">
 
-            <div class="row mb-3">
-                <div class="col-md-6">
-                    <label for="gender" class="form-label">Grade</label>
-                        <select name="gender" class="form-select">
-                            <option selected disabled>Select Grade</option>
-                            <option value="one">One</option>
-                            <option value="two">Two</option>
-                        </select>
-                    <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'gender') : "" ?>
-                    </span>
-             </div>
-             <div class="col-md-6">
-                    <label for="GradeTeacher" class="form-label">Grade Teacher</label>
-                        <select name="GradeTeacher" class="form-select">
-                            <option selected disabled>Select Teacher</option>
-                            <option value="Banda">Banda</option>
-                            <option value="Phiri">Phiri</option>
-                        </select>
-                    <span class="text-danger text-sm">
-                        <?= isset($validation) ? display_form_errors($validation, 'GradeTeacher') : "" ?>
-                    </span>
-             </div>
-        <div class="col-md-6">
-            <label for="enrollmentDate" class="form-label">Enrollment Date</label>
-            <input type="date" class="form-control" name="enrollmentDate">
-            <span class="text-danger text-sm">
-                <?= isset($validation) ? display_form_errors($validation, 'enrollmentDate') : "" ?>
-            </span>
-        </div>
+<div class="col-md-6">
+    <label for="grade" class="form-label">Grade</label>
+    <select name="grade" id="grade" class="form-select" >
+        <option selected disabled>Select Grade</option>
+        <?php foreach ($Grades as $grade): ?>
+            <option value="<?= $grade->GradeID?>"><?= $grade->GradeName ?></option>
+        <?php endforeach; ?>
+    </select>
+    <span class="text-danger text-sm">
+        <?= isset($validation) ? display_form_errors($validation, 'grade') : "" ?>
+    </span>
+</div>
+<div class="col-md-6">
+    <label for="GradeTeacher" class="form-label">Grade Teacher</label>
+    <select name="GradeTeacher" id="teacher" class="form-select">
+        <option selected disabled>Select Teacher</option>
+        <!-- Options will be dynamically added here via JavaScript -->
+    </select>
+    <span class="text-danger text-sm">
+        <?= isset($validation) ? display_form_errors($validation, 'GradeTeacher') : "" ?>
+    </span>
+</div>
+
     </div>
 </div>
 
    
         <!-- Submit button -->
-    <button type="button" class="btn btn-success" id="submitBtn">Submit</button>
+    <button type="submit" class="btn btn-success">Submit</button>
 </form>
 </div>
 </div>
 </div>
 <br>
-
-<script>
-function addRow() {
-    var table = document.getElementById("myTable");
-    var row = table.insertRow(); // Insert a new row at the end of the table
-  
-    // Insert cells (columns) into the new row
-    var cell1 = row.insertCell(0);
-    var cell2 = row.insertCell(1);
-    var cell3 = row.insertCell(2);
-   
-  
-    // Add some content to the cells (you can customize this part)
-    cell1.innerHTML = "<textarea></textarea>";
-  cell2.innerHTML = "<textarea></textarea>";
-  cell3.innerHTML = "<textarea></textarea>";
-   
-  }
-  
-
-
-</script>

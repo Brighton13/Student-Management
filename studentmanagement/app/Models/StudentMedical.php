@@ -4,7 +4,7 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Student extends Model
+class StudentMedical extends Model
 {
     protected $table = 'student_medical_information';
     protected $primaryKey = 'Id';

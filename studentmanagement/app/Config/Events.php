@@ -5,6 +5,7 @@ namespace Config;
 use CodeIgniter\Events\Events;
 use CodeIgniter\Exceptions\FrameworkException;
 use CodeIgniter\HotReloader\HotReloader;
+use App\Listeners\SessionExpirationListener;
 
 /*
  * --------------------------------------------------------------------
@@ -52,4 +53,11 @@ Events::on('pre_system', static function () {
             });
         }
     }
+    
 });
+
+//$sessionexpired= new App\Listeners\SessionExpirationListener();
+
+Events::on('session:expired', [SessionExpirationListener::class, 'handle']);
+//Events ::trigger('session:expired');
+

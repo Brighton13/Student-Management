@@ -7,12 +7,12 @@ use CodeIgniter\Model;
 class Grade extends Model
 {
     protected $table = 'grades';
-    protected $primaryKey = 'ID';
+    protected $primaryKey = '	GradeID ';
     protected $useAutoIncrement = true;
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['name', 'teacher_id'];
+    protected $allowedFields = ['GradeName'];
 
     // Dates
     protected $useTimestamps = false;

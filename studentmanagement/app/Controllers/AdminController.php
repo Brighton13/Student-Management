@@ -7,6 +7,10 @@ use App\Libraries\Hash;
 use App\Models\Announcements;
 use App\Models\Grade;
 use App\Models\Logindetails;
+use App\Models\StudentPersonal;
+use App\Models\StudentParents;
+use App\Models\StudentMedical;
+use App\Models\StudentEnroll;
 use App\Models\Subject;
 use App\Models\TeacherPersonal;
 use App\Models\TeacherContact;
@@ -22,7 +26,7 @@ class AdminController extends BaseController
         ['filter' => 'Auth'];
         if (session()->get('Role') !== 'Admin') {
 
-            echo 'Access denined';
+            echo 'Access denied';
             exit();
         }
 
@@ -101,84 +105,182 @@ class AdminController extends BaseController
     }
     
 
- public function EnrollStudent()
- {     
-     $validation = \Config\Services::validation();
+    public function EnrollStudent()
+    {     
+        $validation = \Config\Services::validation();
+          $data = [
+                'Identity' => $this->StudentIDgenerator(),
+                'validation' => $validation,
+            ];
+    
+        if ($this->request->is("post")) {
+            $rules = [
+                // 'Identity' => 'required|is_unique[student_personal_information.StudentId]',
+                // 'FirstName' => 'required',
+                // 'LastName' => 'required',
+                // 'DOB' => 'required|valid_date', // Changed 'date' to 'valid_date'
+                // 'Gender' => 'required|in_list[male,female]', // Changed 'in' to 'in_list'
+                // 'Nationality' => 'required',
+                // 'Address' => 'required',
+                // 'PhoneNumber' => 'required',
+                // 'Relationship' => 'required', // Added max length for Relationship
+                // 'Grade' => 'required', // Changed 'in' to 'in_list'
+                // 'GradeTeacher' => 'required',
+            ];
+    
+            if ($this->request->getPost('Email') !== null) { // Changed !empty to !== null
+                $rules['Email'] = 'valid_email'; // Changed 'email' to 'valid_email'
+            }
+    
+            if ($this->request->getPost('PhoneTwo') !== null) { // Changed !empty to !== null
+                $rules['PhoneTwo'] = 'max_length[15]';
+            }
+    
+            if ($this->validate($rules)) {
+                // Retrieve POST data
+                $identity = $this->request->getPost('Identity');
+                $firstName = $this->request->getPost('FirstName');
+                $lastName = $this->request->getPost('LastName');
+                $ParentFirstName = $this->request->getPost('p_FirstName');
+                $ParentLastName = $this->request->getPost('p_LastName');
+                $DOB = $this->request->getPost('DOB');
+                $gender = $this->request->getPost('Gender');
+                $Nationality = $this->request->getPost('Nationality');
+                $address = $this->request->getPost('Address');
+                $PhoneOne = $this->request->getPost('PhoneNumber');
+                $Email = $this->request->getPost('Email');
+                $Condition1 = $this->request->getPost('Condition1');
+                $Condition2 = $this->request->getPost('Condition2');
+                $Condition3 = $this->request->getPost('Condition3');       
+                $Condition4 = $this->request->getPost('Condition4');
+                $Emergency1 = $this->request->getPost('Emergency1');
+                $Emergency2 = $this->request->getPost('Emergency2');
+                $Relationship = $this->request->getPost('Relationship');
+                $grade = $this->request->getPost('Grade');
+                $GradeTeacher = $this->request->getPost('GradeTeacher');
+                $enrollmentDate = date('Y-m-d'); 
+                $Password = Hash::encrypt('Zam@24');
+                $Role = 'Student';
+                $age = date('Y') - date('Y', strtotime($DOB));
+    
+                // Insert student personal information
+               
+                $existingStudent = (new StudentPersonal())->where('StudentId', $identity)->first();
+                if ($existingStudent===null) { 
+                    
+                    
+                    $data1 = [
+                    'StudentId' =>  $identity ,
+                    'FirstName' =>   $firstName , 
+                    'LastName' =>  $lastName , 
+                    'DateOfBirth' =>  $DOB,
+                    'Gender' =>  $gender, 
+                    'Nationality' => $Nationality , 
+                    'Address' => $address,   
+                ];
+                $Student = new StudentPersonal();
+                $query1 = $Student->insert($data1);
 
-     if ($this->request->is("get")) {
+                    $data3 = [
+                        'StudentId' =>  $identity ,
+                        'Condition1' => $Condition1,
+                        'Condition2' => $Condition2 ,
+                        'Condition3' => $Condition3 ,
+                        'Condition4' => $Condition4,
+                        'EmergencyContact1' => $Emergency1,
+                        'EmergencyContact2' => $Emergency2 
+                    ];
+                    $studentMed = new StudentMedical();
+                    $query2 = $studentMed->insert($data3);
+        
+                    // Insert student guardian or parent information
+                    $data4 = [
+                   'studentId' => $identity,
+                        'Relationship' => $Relationship,
+                        'EmailAddress' => $Email,
+                        'PhoneNumber' => $PhoneOne, 
+                        'FirstName' => $ParentFirstName,
+                        'LastName' => $ParentLastName,
+                    ];
+                    $studentparent = new StudentParents();
+                    $query3 = $studentparent->insert($data4);
+        
+                    // Insert enrollment details
+                    $data5 = [
+                       'StudentId' => $identity,
+                        'GradeId' => $grade,	
+                        'TeacherId' => $GradeTeacher, 
+                        'EnrollmentDate' => $enrollmentDate
+                    ];
+                    $enrollment = new StudentEnroll();
+                    $query4 = $enrollment->insert($data5);
+        
+                    // Insert login details
+                    $logindata = [
+                        "Identity" => $identity,
+                        'Password' => $Password,
+                        'Role' => $Role,
+                        'IsLoggedIn' => false
+                    ];
+                    $logindetails = new Logindetails();
+                    $query5 = $logindetails->insert($logindata);
+    
+                     
+                    return redirect()->to('Admin')->with('success', 'Student was registered successfully');   
+                } else {  
+                  
+                    
+                    //return var_dump($r);
+                   return redirect()->to('Admin')->with('error', 'Failed to Enroll student');  
+                  } 
+            }  
+    
+                }
+                // Insert student medical information
+               $Grades= new Grade();
+               $Teachers = new TeacherPersonal(); 
+              /// $teachers = $Teachers->where('grade_id', '1')->findAll();
+               $r=$this->GetGradeTeacher(2);
 
-       
-         $data = [
-             'identity' => $this->StudentIDgenerator(),
-             'validation' => $validation,
-         ];
-
-         return view("admin/enroll", $data);
-     }else{
-
-     $validation = \Config\Services::validation();
-
-     $rules = [
-         "Name" => "required",
-         "Age" => "required",
-         "Email" => "required|valid_email",
-         "Address" => "required",
-         'Phone' => 'required|max_length[15]',
-         "Grade" => "required",
-         'identity' => 'is_unique[students.identity]'
-     ];
-
-     if ($this->Validate($rules)) {
-         $name = $this->request->getPost('Name');
-         $email = $this->request->getPost('Email');
-         $Age = $this->request->getPost('Age');
-         $Address = $this->request->getPost('Address');
-         $Phone = $this->request->getPost('Phone');
-         $Grade = $this->request->getPost('Grade');
-         $identity = $this->request->getPost('identity');
-         $gender = $this->request->getPost('Gender');
-
-         $data = [
-             "identity" => $identity,
-             "Name" => $name,
-             "Age" => $Age,
-             "Email" => $email,
-             "Address" => $Address,
-             'Phone' => $Phone,
-             "grade_id" => $Grade,
-             'Password' => Hash::encrypt('test1234'),  // You might want to use hashed passwords in a real scenario
-             'ConfirmPassword' => Hash::encrypt('test1234'),
-             'Role' => "Student",
-             "Gender" => $gender
-         ];
-
-         $Student = new Student();
-
-         $query = $Student->insert($data);
-
-
-         $logindetails = new Logindetails();
-
-         $logindata = [
-             "identity" => $identity,
-             'password' => Hash::encrypt('test1234'),
-             'Role' => 'Student'
-         ];
-
-         $logindetails->insert($logindata);
-
-         if ($query === false) {
-             return redirect()->to("admin/enroll")->with("error", "Student Enrollment Failed");
-         }
-         // var_dump($data);
-         return redirect()->to("admin/studentdetails")->with("success", "Student Enrollment Was Successful");
-     } else {
-         return view('admin/enroll', ['validation' => $validation]);
-     }
-
+            
+            $data = [
+                'Grades'=> $Grades->findAll(),
+                'Teachers'=>$Teachers->findAll(),
+                'validation' => $validation,
+                'identity' => $this->StudentIDgenerator()
+               
+            ];
+        
+           // var_dump($teachers);
+          return view('admin/enroll', $data);
     }
- }
 
+
+
+    public function GetGradeTeacher()
+    {
+        if ($this->request->isAJAX()) {
+            $selectedGrade = $this->request->getPost('selectedGrade');
+            $action = $this->request->getPost('action');
+             var_dump($selectedGrade);
+            // Check if the action is 'get_teacher'
+            if ($action == 'get_teacher') {
+                // Load the TeacherPersonal model
+                $Teacher = new TeacherPersonal();
+        
+                // Retrieve teachers based on the selected grade
+                $teachers = $Teacher->where('grade_id', $selectedGrade)->findAll();
+                
+                // Send JSON response with the retrieved teachers
+                return $this->response->setJSON($teachers);
+            }
+        }
+    }
+    
+    
+    
+    
+    
  
  protected function StudentIDgenerator()
  {
@@ -207,14 +309,10 @@ class AdminController extends BaseController
             'Email' => "required",
             'HomeAddress' => "required",
             'PhoneOne' => 'required|max_length[15]',
-            //'Document1' => 'uploaded[Document1]|max_size[file,1024]|ext_in[file,pdf,doc,docx]',
-                      
+            'grade' => 'required'
         ];
        
-       /*check if optional fields have been provided add to validation rules
-        if (!empty($_FILES['Document2']['name'])) {
-            $rules['Document2'] = 'uploaded[Document2]|max_size[file,1024]|ext_in[file,pdf,doc,docx]';
-        }*/
+       
 
         // Check if PhoneTwo is provided, and if so, add validation rules for it
         if (!empty($this->request->getPost('PhoneTwo'))) {
@@ -236,6 +334,7 @@ class AdminController extends BaseController
             $Password = Hash::encrypt('Zam@24');
             $Role = 'User';
             $age = date('Y') - date('Y', strtotime($DOB));
+            $grade=$this->request->getPost('grade');
 
             
             // Upload files
@@ -284,6 +383,13 @@ class AdminController extends BaseController
             ];
             $teacherContact->insert($data2);
 
+            $teacherGrade= new TeacherGrade();
+            $data23=[
+                'teacher_id'=>$identity,
+                'grade_id' =>$grade
+            ];
+            $teacherGrade->insert($data23);
+
             $teacherQualification = new TeacherQualification();
             $data3 = [
                 'TeacherId' => $identity,
@@ -297,7 +403,7 @@ class AdminController extends BaseController
                 'Identity' => $identity,
                 'Password' => $Password,
                 'Role' => $Role,
-                'IsloggedIn' => 'false',
+                'IsloggedIn' => false,
             ];
             $logindata->insert($logindatum);
 
@@ -306,8 +412,9 @@ class AdminController extends BaseController
             return redirect()->to('Admin')->with('error', 'Teacher was not registered successfully');
         }
     }
-
+    $Grades= new Grade();
     $data = [
+        'Grades' =>$Grades->findAll(),
         'validation' => $validation,
         'identity' => $this->EmployeeIDGenerator(),
     ];

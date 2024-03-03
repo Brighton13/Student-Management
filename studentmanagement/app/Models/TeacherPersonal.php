@@ -12,7 +12,7 @@ class TeacherPersonal extends Model
     protected $returnType = 'object';
     protected $useSoftDeletes = false;
     protected $protectFields = true;
-    protected $allowedFields = ['Identity',  'FirstName', 'LastName',  'Age', 'Gender', 'Nationality','HomeAddress','DateOfBirth'];
+    protected $allowedFields = ['Identity',  'FirstName', 'LastName',  'Age', 'Gender', 'Nationality','HomeAddress','DateOfBirth','grade_id'];
 
     // Dates
     protected $useTimestamps = false;
